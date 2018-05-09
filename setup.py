@@ -31,7 +31,7 @@ classifiers = [
 
 install_requires = [
     'abjad>=2.21',
-    'uqbar>=0.2.9',
+    'uqbar>=0.2.11',
     ]
 
 keywords = [
