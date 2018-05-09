@@ -25,7 +25,7 @@ def test_success(paths, call_subprocess_mock):
     pytest.helpers.create_segment(paths.test_directory_path, 'segment_a')
     pytest.helpers.create_segment(paths.test_directory_path, 'segment_b')
     pytest.helpers.create_segment(paths.test_directory_path, 'segment_c')
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     command = ['--stage']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):

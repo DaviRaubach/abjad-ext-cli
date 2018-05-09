@@ -7,7 +7,7 @@ from io import StringIO
 def test_list(paths):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    script = abjad.cli.ManageBuildTargetScript()
+    script = abjadext.cli.ManageBuildTargetScript()
     command = ['--new', 'big-version']
     with uqbar.io.DirectoryChange(paths.score_path):
         try:

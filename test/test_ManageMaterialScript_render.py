@@ -15,7 +15,7 @@ def test_success_one_material(paths, open_file_mock):
     pdf_path = material_path.joinpath('illustration.pdf')
     assert pdf_path.exists()
     pdf_path.unlink()
-    script = abjad.cli.ManageMaterialScript()
+    script = abjadext.cli.ManageMaterialScript()
     command = ['--render', 'test_material']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):

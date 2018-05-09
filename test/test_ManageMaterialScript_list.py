@@ -11,7 +11,7 @@ def test_list_materials(paths):
     pytest.helpers.create_material(paths.test_directory_path, 'bar')
     pytest.helpers.create_material(paths.test_directory_path, 'baz')
     pytest.helpers.create_material(paths.test_directory_path, 'quux')
-    script = abjad.cli.ManageMaterialScript()
+    script = abjadext.cli.ManageMaterialScript()
     command = ['--list']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
@@ -34,7 +34,7 @@ def test_list_materials(paths):
 def test_list_materials_no_materials(paths):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    script = abjad.cli.ManageMaterialScript()
+    script = abjadext.cli.ManageMaterialScript()
     command = ['--list']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):

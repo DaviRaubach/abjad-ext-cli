@@ -44,7 +44,7 @@ def test_force_replace(paths):
 def test_internal_path(paths):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    script = abjad.cli.ManageMaterialScript()
+    script = abjadext.cli.ManageMaterialScript()
     command = ['--new', 'test_material']
     internal_path = paths.score_path.joinpath('test_score', 'builds')
     assert internal_path.exists()
@@ -67,7 +67,7 @@ def test_internal_path(paths):
 def test_success(paths):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    script = abjad.cli.ManageMaterialScript()
+    script = abjadext.cli.ManageMaterialScript()
     command = ['--new', 'test_material']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):

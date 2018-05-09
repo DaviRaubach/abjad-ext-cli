@@ -23,7 +23,7 @@ def test_lilypond_error(paths):
         test_material = lilypondfiletools.LilyPondFile.new()
         test_material.items.append(r'\this-does-not-exist')
         '''))
-    script = abjad.cli.ManageMaterialScript()
+    script = abjadext.cli.ManageMaterialScript()
     command = ['--illustrate', 'test_material']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
@@ -68,7 +68,7 @@ def test_missing_definition(paths):
     material_path = pytest.helpers.create_material(paths.test_directory_path, 'test_material')
     definition_path = material_path.joinpath('definition.py')
     definition_path.unlink()
-    script = abjad.cli.ManageMaterialScript()
+    script = abjadext.cli.ManageMaterialScript()
     command = ['--illustrate', 'test_material']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
@@ -97,7 +97,7 @@ def test_python_cannot_illustrate(paths):
         file_pointer.write(normalize(r'''
         test_material = None
         '''))
-    script = abjad.cli.ManageMaterialScript()
+    script = abjadext.cli.ManageMaterialScript()
     command = ['--illustrate', 'test_material']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
@@ -134,7 +134,7 @@ def test_python_error_on_illustrate(paths):
 
         test_material = Foo()
         '''))
-    script = abjad.cli.ManageMaterialScript()
+    script = abjadext.cli.ManageMaterialScript()
     command = ['--illustrate', 'test_material']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
@@ -161,7 +161,7 @@ def test_python_error_on_import(paths):
     definition_path = material_path.joinpath('definition.py')
     with open(str(definition_path), 'a') as file_pointer:
         file_pointer.write('\n\nfailure = 1 / 0\n')
-    script = abjad.cli.ManageMaterialScript()
+    script = abjadext.cli.ManageMaterialScript()
     command = ['--illustrate', 'test_material']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
@@ -187,7 +187,7 @@ def test_success_all_materials(paths, open_file_mock):
         paths.test_directory_path, 'material_two')
     pytest.helpers.create_material(
         paths.test_directory_path, 'material_three')
-    script = abjad.cli.ManageMaterialScript()
+    script = abjadext.cli.ManageMaterialScript()
     command = ['--illustrate', '*']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
@@ -239,7 +239,7 @@ def test_success_filtered_materials(paths, open_file_mock):
     pytest.helpers.create_material(paths.test_directory_path, 'material_one')
     pytest.helpers.create_material(paths.test_directory_path, 'material_two')
     pytest.helpers.create_material(paths.test_directory_path, 'material_three')
-    script = abjad.cli.ManageMaterialScript()
+    script = abjadext.cli.ManageMaterialScript()
     command = ['--illustrate', 'material_t*']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
@@ -295,7 +295,7 @@ def test_success_one_material(paths, open_file_mock):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
     pytest.helpers.create_material(paths.test_directory_path, 'test_material')
-    script = abjad.cli.ManageMaterialScript()
+    script = abjadext.cli.ManageMaterialScript()
     command = ['--illustrate', 'test_material']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):

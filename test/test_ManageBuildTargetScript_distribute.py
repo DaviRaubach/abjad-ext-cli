@@ -27,7 +27,7 @@ def test_success(paths, open_file_mock):
     pytest.helpers.illustrate_segments(paths.test_directory_path)
     pytest.helpers.collect_segments(paths.test_directory_path)
     pytest.helpers.create_build_target(paths.test_directory_path)
-    script = abjad.cli.ManageBuildTargetScript()
+    script = abjadext.cli.ManageBuildTargetScript()
     command = ['--render', 'letter-portrait']
     with uqbar.io.DirectoryChange(paths.score_path):
         try:

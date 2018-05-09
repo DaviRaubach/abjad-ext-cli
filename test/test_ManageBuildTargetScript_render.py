@@ -37,7 +37,7 @@ def test_success_all(paths, open_file_mock):
     pytest.helpers.illustrate_segments(paths.test_directory_path)
     pytest.helpers.collect_segments(paths.test_directory_path)
     pytest.helpers.create_build_target(paths.test_directory_path)
-    script = abjad.cli.ManageBuildTargetScript()
+    script = abjadext.cli.ManageBuildTargetScript()
     command = ['--render', 'letter-portrait']
     with uqbar.io.DirectoryChange(paths.score_path):
         try:
@@ -72,7 +72,7 @@ def test_success_back_cover(paths, open_file_mock):
     pytest.helpers.illustrate_segments(paths.test_directory_path)
     pytest.helpers.collect_segments(paths.test_directory_path)
     target_path = pytest.helpers.create_build_target(paths.test_directory_path)
-    script = abjad.cli.ManageBuildTargetScript()
+    script = abjadext.cli.ManageBuildTargetScript()
     command = [
         '--render', 'letter-portrait',
         '--back-cover',
@@ -110,7 +110,7 @@ def test_success_front_cover(paths, open_file_mock):
     pytest.helpers.illustrate_segments(paths.test_directory_path)
     pytest.helpers.collect_segments(paths.test_directory_path)
     target_path = pytest.helpers.create_build_target(paths.test_directory_path)
-    script = abjad.cli.ManageBuildTargetScript()
+    script = abjadext.cli.ManageBuildTargetScript()
     command = [
         '--render', 'letter-portrait',
         '--front-cover',
@@ -148,7 +148,7 @@ def test_success_music(paths, open_file_mock):
     pytest.helpers.illustrate_segments(paths.test_directory_path)
     pytest.helpers.collect_segments(paths.test_directory_path)
     target_path = pytest.helpers.create_build_target(paths.test_directory_path)
-    script = abjad.cli.ManageBuildTargetScript()
+    script = abjadext.cli.ManageBuildTargetScript()
     command = [
         '--render', 'letter-portrait',
         '--music',
@@ -189,7 +189,7 @@ def test_success_parts(paths, open_file_mock):
     pytest.helpers.illustrate_segments(paths.test_directory_path)
     pytest.helpers.collect_segments(paths.test_directory_path)
     target_path = pytest.helpers.create_build_target(paths.test_directory_path)
-    script = abjad.cli.ManageBuildTargetScript()
+    script = abjadext.cli.ManageBuildTargetScript()
     command = [
         '--render', 'letter-portrait',
         '--parts',
@@ -227,7 +227,7 @@ def test_success_preface(paths, open_file_mock):
     pytest.helpers.illustrate_segments(paths.test_directory_path)
     pytest.helpers.collect_segments(paths.test_directory_path)
     target_path = pytest.helpers.create_build_target(paths.test_directory_path)
-    script = abjad.cli.ManageBuildTargetScript()
+    script = abjadext.cli.ManageBuildTargetScript()
     command = [
         '--render', 'letter-portrait',
         '--preface',

@@ -12,7 +12,7 @@ def test_list_segments(paths):
     pytest.helpers.create_segment(paths.test_directory_path, 'segment_two')
     pytest.helpers.create_segment(
         paths.test_directory_path, 'segment_three')
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     command = ['--list']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
@@ -34,7 +34,7 @@ def test_list_segments(paths):
 def test_list_segments_no_segments(paths):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     command = ['--list']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
@@ -58,7 +58,7 @@ def test_list_segments_unstaged(paths):
     pytest.helpers.create_segment(paths.test_directory_path, 'segment_two')
     pytest.helpers.create_segment(
         paths.test_directory_path, 'segment_three')
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     segment_names = script._read_segments_list_json(
         paths.score_path,
         verbose=False,

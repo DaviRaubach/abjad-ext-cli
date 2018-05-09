@@ -15,7 +15,7 @@ def test_success_one_segment(paths, open_file_mock):
     pdf_path = segment_path.joinpath('illustration.pdf')
     assert pdf_path.exists()
     pdf_path.unlink()
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     command = ['--render', 'test_segment']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):

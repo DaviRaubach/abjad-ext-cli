@@ -1,4 +1,4 @@
-import abjad.cli
+import abjadext.cli
 import doctest
 import pathlib
 import pytest
@@ -24,7 +24,7 @@ package_name = 'test_score'
 
 @pytest.fixture
 def call_subprocess_mock():
-    patcher = mock.patch('abjad.cli.ScorePackageScript._call_subprocess')
+    patcher = mock.patch('abjadext.cli.ScorePackageScript._call_subprocess')
     yield patcher.start()
     patcher.stop()
 
@@ -72,7 +72,7 @@ def paths(tmpdir):
 
 @pytest.helpers.register
 def collect_segments(test_directory_path):
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     command = ['--collect']
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
@@ -135,7 +135,7 @@ def create_build_target(
     force=False,
     expect_error=False,
 ):
-    script = abjad.cli.ManageBuildTargetScript()
+    script = abjadext.cli.ManageBuildTargetScript()
     command = ['--new']
     if force:
         command.insert(0, '-f')
@@ -160,7 +160,7 @@ def create_material(
     force=False,
     expect_error=False,
 ):
-    script = abjad.cli.ManageMaterialScript()
+    script = abjadext.cli.ManageMaterialScript()
     command = ['--new', material_name]
     if force:
         command.insert(0, '-f')
@@ -180,7 +180,7 @@ def create_material(
 
 @pytest.helpers.register
 def create_score(test_directory_path, force=False, expect_error=False):
-    script = abjad.cli.ManageScoreScript()
+    script = abjadext.cli.ManageScoreScript()
     command = [
         '--new',
         'Test Score',
@@ -212,7 +212,7 @@ def create_segment(
     force=False,
     expect_error=False,
 ):
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     command = ['--new', segment_name]
     if force:
         command.insert(0, '-f')
@@ -320,7 +320,7 @@ def get_fancy_segment_maker_code():
 
 @pytest.helpers.register
 def illustrate_material(test_directory_path, material_name):
-    script = abjad.cli.ManageMaterialScript()
+    script = abjadext.cli.ManageMaterialScript()
     command = ['--illustrate', material_name]
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
@@ -332,7 +332,7 @@ def illustrate_material(test_directory_path, material_name):
 
 @pytest.helpers.register
 def illustrate_segment(test_directory_path, segment_name):
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     command = ['--illustrate', segment_name]
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
@@ -344,7 +344,7 @@ def illustrate_segment(test_directory_path, segment_name):
 
 @pytest.helpers.register
 def illustrate_segments(test_directory_path):
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     command = ['--illustrate', '*']
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):

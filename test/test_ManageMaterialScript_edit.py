@@ -11,7 +11,7 @@ def test_success(paths, call_subprocess_mock):
     pytest.helpers.create_score(paths.test_directory_path)
     material_path = pytest.helpers.create_material(
         paths.test_directory_path, 'test_material')
-    script = abjad.cli.ManageMaterialScript()
+    script = abjadext.cli.ManageMaterialScript()
     command = ['--edit', 'test_material']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):

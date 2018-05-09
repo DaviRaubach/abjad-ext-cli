@@ -9,7 +9,7 @@ from io import StringIO
 def test_exists(paths):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    script = abjad.cli.ManageBuildTargetScript()
+    script = abjadext.cli.ManageBuildTargetScript()
     command = ['--new']
     with uqbar.io.DirectoryChange(paths.score_path):
         try:
@@ -32,7 +32,7 @@ def test_exists(paths):
 def test_explicit(paths):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    script = abjad.cli.ManageBuildTargetScript()
+    script = abjadext.cli.ManageBuildTargetScript()
     command = [
         '--new',
         '--paper-size', 'a3',
@@ -71,7 +71,7 @@ def test_explicit(paths):
 def test_force_replace(paths):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    script = abjad.cli.ManageBuildTargetScript()
+    script = abjadext.cli.ManageBuildTargetScript()
     command = ['-f', '--new']
     with uqbar.io.DirectoryChange(paths.score_path):
         try:
@@ -116,7 +116,7 @@ def test_implicit(paths):
         ]
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    script = abjad.cli.ManageBuildTargetScript()
+    script = abjadext.cli.ManageBuildTargetScript()
     command = ['--new']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
@@ -305,7 +305,7 @@ def test_implicit(paths):
 def test_internal_path(paths):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    script = abjad.cli.ManageBuildTargetScript()
+    script = abjadext.cli.ManageBuildTargetScript()
     command = ['--new']
     internal_path = paths.score_path.joinpath('test_score', 'builds')
     assert internal_path.exists()
@@ -328,7 +328,7 @@ def test_internal_path(paths):
 def test_named(paths):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    script = abjad.cli.ManageBuildTargetScript()
+    script = abjadext.cli.ManageBuildTargetScript()
     command = [
         '--new',
         'World Premiere Version',

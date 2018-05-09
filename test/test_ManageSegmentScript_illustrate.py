@@ -39,7 +39,7 @@ def test_lilypond_error(paths):
 
         segment_maker = FaultySegmentMaker()
         '''))
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     command = ['--illustrate', 'test_segment']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
@@ -97,7 +97,7 @@ def test_missing_definition(paths):
     segment_path = pytest.helpers.create_segment(paths.test_directory_path, 'test_segment')
     definition_path = segment_path.joinpath('definition.py')
     definition_path.unlink()
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     command = ['--illustrate', 'test_segment']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
@@ -141,7 +141,7 @@ def test_python_error_on_illustrate(paths):
 
         segment_maker = FaultySegmentMaker()
         '''))
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     command = ['--illustrate', 'test_segment']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
@@ -171,7 +171,7 @@ def test_python_error_on_import(paths):
     definition_path = segment_path.joinpath('definition.py')
     with open(str(definition_path), 'a') as file_pointer:
         file_pointer.write('\n\nfailure = 1 / 0\n')
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     command = ['--illustrate', 'test_segment']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
@@ -197,7 +197,7 @@ def test_success_all_segments(paths, open_file_mock):
     pytest.helpers.create_segment(paths.test_directory_path, 'segment_one')
     pytest.helpers.create_segment(paths.test_directory_path, 'segment_two')
     pytest.helpers.create_segment(paths.test_directory_path, 'segment_three')
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     command = ['--illustrate', '*']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
@@ -264,7 +264,7 @@ def test_success_filtered_segments(paths, open_file_mock):
     pytest.helpers.create_segment(paths.test_directory_path, 'segment_one')
     pytest.helpers.create_segment(paths.test_directory_path, 'segment_two')
     pytest.helpers.create_segment(paths.test_directory_path, 'segment_three')
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     command = ['--illustrate', 'segment_t*']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
@@ -319,7 +319,7 @@ def test_success_one_segment(paths, open_file_mock):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
     pytest.helpers.create_segment(paths.test_directory_path, 'test_segment')
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     command = ['--illustrate', 'test_segment']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):

@@ -14,7 +14,7 @@ def test_success(paths, open_file_mock):
     pytest.helpers.create_segment(
         paths.test_directory_path, 'segment_three')
     pytest.helpers.illustrate_segments(paths.test_directory_path)
-    collect_script = abjad.cli.ManageSegmentScript()
+    collect_script = abjadext.cli.ManageSegmentScript()
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
             try:

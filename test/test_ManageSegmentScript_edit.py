@@ -12,7 +12,7 @@ def test_success(paths, call_subprocess_mock):
     pytest.helpers.create_score(paths.test_directory_path)
     segment_path = pytest.helpers.create_segment(
         paths.test_directory_path, 'test_segment')
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     command = ['--edit', 'test_segment']
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):

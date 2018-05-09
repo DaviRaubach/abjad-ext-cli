@@ -43,7 +43,7 @@ def test_force_replace(paths):
 def test_internal_path(paths):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     command = ['--new', 'test_segment']
     internal_path = paths.score_path.joinpath('test_score', 'builds')
     assert internal_path.exists()
@@ -68,7 +68,7 @@ def test_internal_path(paths):
 def test_success(paths):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    script = abjad.cli.ManageSegmentScript()
+    script = abjadext.cli.ManageSegmentScript()
     try:
         names = script._read_segments_list_json(
             paths.score_path,
