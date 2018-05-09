@@ -30,7 +30,7 @@ before_install:
 - wget -q ${LILYPOND_URL}lilypond-${LILYPOND_VERSION}-1.linux-64.sh
 - sh lilypond-$LILYPOND_VERSION-1.linux-64.sh --batch
 - export PATH=/home/travis/bin:$PATH
-- pip install -U pip coverage mypy
+- pip install -U pip coverage
 - pip install https://github.com/Abjad/abjad/archive/master.zip
 - pip install https://github.com/josiah-wolf-oberholtzer/uqbar/archive/master.zip
 - pip install --target /tmp/typehints https://github.com/Abjad/abjad/archive/master.zip
@@ -38,7 +38,7 @@ before_install:
 - export MYPYPATH=/tmp/typehints
 
 install:
-- pip install -e .
+- pip install -e .[development]
 
 script:
 - py.test

@@ -27,23 +27,29 @@ classifiers = [
     'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: Implementation :: CPython',
     'Topic :: Artistic Software',
-    ]
+]
 
 install_requires = [
     'abjad>=2.21',
     'uqbar>=0.2.11',
-    ]
+]
+
+extras_require = {
+    'development': [
+        'mypy',
+        'pytest-helpers-namespace',
+        'pytest>=3.5.0',
+    ],
+}
 
 keywords = [
     'music composition',
     'music notation',
     'formalized score control',
     'lilypond',
-    ]
-keywords += [
     'documentation',
     'cli',
-    ]
+]
 keywords = ', '.join(keywords)
 
 with open('README.md', 'r') as file_pointer:
@@ -51,12 +57,12 @@ with open('README.md', 'r') as file_pointer:
 
 version = read_version()
 
-
 if __name__ == '__main__':
     setuptools.setup(
         author=author,
         author_email=author_email,
         classifiers=classifiers,
+        extras_require=extras_require,
         include_package_data=True,
         install_requires=install_requires,
         license='MIT',
@@ -67,4 +73,4 @@ if __name__ == '__main__':
         platforms='Any',
         url='http://www.projectabjad.org',
         version=version,
-        )
+    )
