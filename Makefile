@@ -1,5 +1,3 @@
-.PHONY: docs build
-
 build:
 	python setup.py sdist
 
