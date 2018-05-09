@@ -36,6 +36,7 @@ before_install:
 - pip install --no-deps --target /tmp/typehints https://github.com/Abjad/abjad/archive/master.zip
 - pip install --no-deps --target /tmp/typehints https://github.com/josiah-wolf-oberholtzer/uqbar/archive/master.zip
 - export MYPYPATH=/tmp/typehints
+- ajv --help
 
 install:
 - pip install -e .[development]
@@ -43,3 +44,4 @@ install:
 script:
 - py.test
 - mypy abjadext/cli
+- ajv --help
