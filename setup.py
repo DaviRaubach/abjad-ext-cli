@@ -28,10 +28,11 @@ if __name__ == '__main__':
             'Topic :: Artistic Software',
             ],
         extras_require={
-            'development': [
+            'test': [
                 'mypy',
                 'pytest-helpers-namespace',
                 'pytest>=3.5.0',
+                'pytest-cov',
                 ],
             },
         include_package_data=True,
