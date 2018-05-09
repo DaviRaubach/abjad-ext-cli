@@ -18,7 +18,7 @@ class ManageBuildTargetScript(ScorePackageScript):
 
     '''
 
-    ### CLASS VARIABLES ###
+    # ### CLASS VARIABLES ### #
 
     alias = 'builds'
     config_name = '.abjadrc'
@@ -132,7 +132,7 @@ class ManageBuildTargetScript(ScorePackageScript):
         ('f4', ((210, 'mm'), (330, 'mm'))),
         ])
 
-    ### PRIVATE METHODS ###
+    # ### PRIVATE METHODS ### #
 
     def _cleanup_latex_ephemera(self, build_target_path):
         ephemera = [
@@ -150,7 +150,7 @@ class ManageBuildTargetScript(ScorePackageScript):
         force,
         paper_size=None,
         orientation=None,
-        ):
+    ):
         from abjad import abjad_configuration
         if target_name is True:
             name = paper_size.lower().replace(' ', '-')
@@ -229,9 +229,6 @@ class ManageBuildTargetScript(ScorePackageScript):
                 str(target_path.joinpath(target_name)),
                 )
             print('    {} --> {}'.format(source_name, target_name))
-        #archive_path = self._distribution_path.joinpath(target_name + '.zip')
-        #if archive_path.exists():
-        #    shutil.rmtree(str(archive_path))
 
     def _handle_list(self):
         paths = sorted(
@@ -251,7 +248,7 @@ class ManageBuildTargetScript(ScorePackageScript):
         render_parts=None,
         render_preface=None,
         render_score=None,
-        ):
+    ):
         build_target_path = self._build_path.joinpath(target_name)
         if not build_target_path.exists():
             print('No build target found: {!r}.'.format(target_name))
@@ -265,7 +262,7 @@ class ManageBuildTargetScript(ScorePackageScript):
             render_parts,
             render_preface,
             render_score,
-            ]):
+        ]):
             render_back_cover = True
             render_front_cover = True
             render_music = True
@@ -296,7 +293,7 @@ class ManageBuildTargetScript(ScorePackageScript):
             render_score,
             render_front_cover,
             render_back_cover,
-            ]):
+        ]):
             self._cleanup_latex_ephemera(build_target_path)
         if open_score_only:
             paths_to_open = [build_target_path.joinpath('score.pdf')]
@@ -383,7 +380,7 @@ class ManageBuildTargetScript(ScorePackageScript):
             for _ in range(2):
                 try:
                     exit_code = subprocess.call(command, shell=True)
-                except:
+                except Exception:
                     print('    Failed to render: {!s}'.format(relative_path))
                     sys.exit(1)
                 if exit_code:
@@ -392,10 +389,7 @@ class ManageBuildTargetScript(ScorePackageScript):
         return latex_path.with_suffix('.pdf')
 
     def _run_lilypond(self, lilypond_path):
-        from abjad import abjad_configuration
         command = '{} -dno-point-and-click -o {} {}'.format(
-            # not sure why abjad_configuration.get() returns none:
-            #abjad_configuration.get('lilypond_path', 'lilypond'),
             'lilypond',
             str(lilypond_path).replace('.ly', ''),
             str(lilypond_path),

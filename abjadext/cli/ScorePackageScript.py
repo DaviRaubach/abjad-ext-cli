@@ -19,12 +19,12 @@ class ScorePackageScript(CLI):
     Abstract base class for score-package scripts.
     '''
 
-    ### CLASS VARIABLES ###
+    # ### CLASS VARIABLES ### #
 
     _name_re = re.compile('^[a-z][a-z0-9_]*$')
     config_name = '.abjadrc'
 
-    ### INITIALIZER ###
+    # ### INITIALIZER ### #
 
     def __init__(self):
         CLI.__init__(self)
@@ -36,7 +36,7 @@ class ScorePackageScript(CLI):
         self._segments_path = None
         self._materials_path = None
 
-    ### PRIVATE METHODS ###
+    # ### PRIVATE METHODS ### #
 
     def _call_subprocess(self, command):
         '''Trivial wrapper for mocking purposes.'''
@@ -72,48 +72,6 @@ class ScorePackageScript(CLI):
                 shutil.copyfile(str(source_path), str(target_path))
             copied_paths.append(target_path)
         return copied_paths
-
-    def _create_build_target(
-        self,
-        name,
-        score_path,
-        paper_size,
-        orientation,
-        force=False,
-        ):
-        from abjad import abjad_configuration
-        target_path = self._name_to_score_subdirectory(
-            name, 'builds', score_path)
-        if target_path.exists() and not force:
-            print('    Path exists: {!s}'.format(
-                target_path.relative_to(self._score_package_path.parent)))
-            sys.exit(1)
-        metadata = self._read_score_metadata_json(score_path)
-        metadata['score_package_name'] = score_path.name
-        if orientation == 'portrait':
-            rotation = 0
-            width, height = self.paper_sizes[paper_size]
-        else:
-            rotation = -90
-            height, width = self.paper_sizes[paper_size]
-        metadata['rotation'] = rotation
-        metadata['orientation'] = orientation
-        metadata['paper_size'] = paper_size
-        metadata['height'] = height[0]
-        metadata['width'] = width[0]
-        metadata['unit'] = height[1]
-        metadata['global_staff_size'] = 12
-        metadata['uppercase_composer_name'] = metadata['composer_name'].upper()
-        metadata['uppercase_title'] = metadata['title'].upper()
-        metadata['lilypond_version'] = \
-            abjad_configuration.get_lilypond_version_string()
-        source_name = 'build'
-        source_path = self._get_boilerplate_path().joinpath(source_name)
-        suffixes = ('.py', '.tex', '.ly', '.ily')
-        for path in self._copy_tree(source_path, target_path):
-            if path.is_file() and path.suffix in suffixes:
-                self._template_file(path, **metadata)
-        return target_path
 
     @classmethod
     def _get_boilerplate_path(cls):
@@ -155,7 +113,7 @@ class ScorePackageScript(CLI):
         with systemtools.TemporaryDirectoryChange(str(score_root_path)):
             try:
                 importlib.invalidate_caches()
-            except:
+            except Exception:
                 pass
             try:
                 return importlib.import_module(path)
@@ -219,13 +177,14 @@ class ScorePackageScript(CLI):
                 try:
                     importlib.invalidate_caches()
                     module = importlib.import_module(path)
-                    path = getattr(module, '__file__',  # A module.
-                        getattr(module, '__path__'))  # A package.
+                    path = getattr(module, '__file__', None)  # A module.
+                    if path is None:
+                        path = getattr(module, '__path__')  # A package.
                     if hasattr(path, '_path'):  # A local import.
                         path = path._path
                     if not isinstance(path, str):  # If it's a package...
                         path = path[0]  # Get the first path in the list.
-                except:
+                except Exception:
                     traceback.print_exc()
             # Make sure to expand any home variables.
             path = pathlib.Path(os.path.expanduser(path))
@@ -263,7 +222,7 @@ class ScorePackageScript(CLI):
             not path.joinpath('segments').exists() or
             not path.joinpath('builds').exists() or
             not path.joinpath('tools').exists()
-            ):
+        ):
             print('Score directory {!r} is malformed.'.format(path))
             sys.exit(1)
         return path
@@ -282,7 +241,7 @@ class ScorePackageScript(CLI):
         try:
             with open(str(path), 'r') as file_pointer:
                 argument = json.loads(file_pointer.read())
-        except:
+        except Exception:
             if verbose:
                 print('JSON is corrupted.')
             if strict:
@@ -352,7 +311,6 @@ class ScorePackageScript(CLI):
         try:
             completed_template = template.format(**keywords)
         except (IndexError, KeyError):
-            #traceback.print_exc()
             lines = template.splitlines()
             for i, line in enumerate(lines):
                 try:
@@ -387,14 +345,14 @@ class ScorePackageScript(CLI):
         self,
         lilypond_file,
         output_directory,
-        ):
+    ):
         ly_path = output_directory.joinpath('illustration.ly')
         message = '    Writing {!s} ... '
         message = message.format(ly_path.relative_to(self._score_repository_path))
         print(message, end='')
         try:
             lilypond_format = format(lilypond_file)
-        except:
+        except Exception:
             print('Failed!')
             traceback.print_exc()
             sys.exit(1)
@@ -407,8 +365,7 @@ class ScorePackageScript(CLI):
         self,
         ly_path,
         output_directory,
-        ):
-        from abjad import abjad_configuration
+    ):
         pdf_path = output_directory.joinpath('illustration.pdf')
         message = '    Writing {!s} ... '
         message = message.format(
@@ -416,8 +373,6 @@ class ScorePackageScript(CLI):
             )
         print(message, end='')
         command = '{} -dno-point-and-click -o {} {}'.format(
-            # not sure why the call to abjad_configuration.get() returns none:
-            #abjad_configuration.get('lilypond_path', 'lilypond'),
             'lilypond',
             str(ly_path).replace('.ly', ''),
             str(ly_path),
