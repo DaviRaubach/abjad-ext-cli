@@ -31,14 +31,14 @@ if __name__ == '__main__':
             'test': [
                 'mypy',
                 'pytest-helpers-namespace',
-                'pytest>=3.5.0',
+                'pytest >= 3.5.0',
                 'pytest-cov',
                 ],
             },
         include_package_data=True,
         install_requires=[
-            'abjad>=2.21',
-            'uqbar>=0.2.11',
+            'abjad >= 2.21',
+            'uqbar >= 0.2.11',
             ],
         license='MIT',
         long_description=pathlib.Path('README.md').read_text(),
