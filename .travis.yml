@@ -46,3 +46,7 @@ script:
 - pytest
 - ajv --help
 - mypy abjadext/
+
+after_success:
+- pip install coveralls
+- coveralls
