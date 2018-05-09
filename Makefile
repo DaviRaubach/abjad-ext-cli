@@ -10,9 +10,6 @@ clean:
 	rm -Rif dist/
 	rm -Rif build/
 
-docs:
-	make -C docs/ html
-
 release:
 	make clean
 	make build
