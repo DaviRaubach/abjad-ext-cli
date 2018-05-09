@@ -14,7 +14,7 @@ class ManageBuildTargetScript(ScorePackageScript):
 
     ..  shell::
 
-        ajv target --help
+        ajv builds --help
 
     '''
 
