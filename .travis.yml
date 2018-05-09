@@ -42,6 +42,6 @@ install:
 - pip install -e .[development]
 
 script:
-- py.test
+- pytest
 - mypy abjadext/cli
 - ajv --help
