@@ -1,7 +1,7 @@
-import pytest
-import abjad
+import abjadext.cli
 import os
 import platform
+import pytest
 import uqbar.io
 from io import StringIO
 from uqbar.strings import normalize

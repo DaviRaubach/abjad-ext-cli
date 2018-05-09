@@ -1,4 +1,4 @@
-import abjad
+import abjadext.cli
 import os
 import platform
 import pytest

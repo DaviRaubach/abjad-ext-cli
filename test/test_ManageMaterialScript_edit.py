@@ -1,4 +1,4 @@
-import abjad
+import abjadext.cli
 import pytest
 import uqbar.io
 from abjad import abjad_configuration
