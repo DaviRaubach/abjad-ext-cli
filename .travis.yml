@@ -33,8 +33,8 @@ before_install:
 - pip install -U pip coverage
 - pip install https://github.com/Abjad/abjad/archive/master.zip
 - pip install https://github.com/josiah-wolf-oberholtzer/uqbar/archive/master.zip
-- pip install --target /tmp/typehints https://github.com/Abjad/abjad/archive/master.zip
-- pip install --target /tmp/typehints https://github.com/josiah-wolf-oberholtzer/uqbar/archive/master.zip
+- pip install --no-deps --target /tmp/typehints https://github.com/Abjad/abjad/archive/master.zip
+- pip install --no-deps --target /tmp/typehints https://github.com/josiah-wolf-oberholtzer/uqbar/archive/master.zip
 - export MYPYPATH=/tmp/typehints
 
 install:
