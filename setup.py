@@ -38,7 +38,7 @@ if __name__ == '__main__':
         include_package_data=True,
         install_requires=[
             'abjad >= 2.21',
-            'uqbar >= 0.2.11',
+            'uqbar >= 0.2.12',
             ],
         license='MIT',
         long_description=pathlib.Path('README.md').read_text(),
