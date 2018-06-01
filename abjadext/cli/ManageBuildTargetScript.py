@@ -1,10 +1,9 @@
+import abjad
 import collections
 import os
 import shutil
 import subprocess
 import sys
-from abjad.utilities import String
-import abjad.system
 from .ScorePackageScript import ScorePackageScript
 
 
@@ -151,12 +150,11 @@ class ManageBuildTargetScript(ScorePackageScript):
         paper_size=None,
         orientation=None,
     ):
-        from abjad import abjad_configuration
         if target_name is True:
             name = paper_size.lower().replace(' ', '-')
             name = '{}-{}'.format(name, orientation)
         else:
-            name = String(target_name).to_dash_case()
+            name = abjad.utilities.String(target_name).to_dash_case()
         dimensions = self.paper_sizes[paper_size]
         message = 'Creating build target {!r} ({}{} x {}{})'.format(
             name,
@@ -188,7 +186,7 @@ class ManageBuildTargetScript(ScorePackageScript):
         metadata['uppercase_composer_name'] = metadata['composer_name'].upper()
         metadata['uppercase_title'] = metadata['title'].upper()
         metadata['lilypond_version'] = \
-            abjad_configuration.get_lilypond_version_string()
+            abjad.abjad_configuration.get_lilypond_version_string()
         source_name = 'build'
         source_path = self._get_boilerplate_path().joinpath(source_name)
         suffixes = ('.py', '.tex', '.ly', '.ily')

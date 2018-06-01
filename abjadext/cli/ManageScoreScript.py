@@ -1,8 +1,8 @@
+import abjad
 import datetime
 import os
 import pathlib
 import sys
-from abjad.utilities import String
 from .ScorePackageScript import ScorePackageScript
 
 
@@ -36,7 +36,7 @@ class ManageScoreScript(ScorePackageScript):
         force=False,
         ):
         print('Creating score package {!r}...'.format(title))
-        score_package_name = String(title)
+        score_package_name = abjad.utilities.String(title)
         score_package_name = score_package_name.to_accent_free_snake_case()
         outer_target_path = pathlib.Path(score_package_name).absolute()
         inner_target_path = outer_target_path.joinpath(score_package_name)

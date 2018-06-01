@@ -1,10 +1,8 @@
+import abjad
 import inspect
 import os
 import sys
 import traceback
-import abjad.abctools
-import abjad.system
-from abjad import abjad_configuration
 from .ScorePackageScript import ScorePackageScript
 
 
@@ -66,7 +64,7 @@ class ManageMaterialScript(ScorePackageScript):
         if not matching_paths:
             print('    No matching materials.')
             self._handle_list()
-        command = [abjad_configuration.get_text_editor()]
+        command = [abjad.abjad_configuration.get_text_editor()]
         for path in matching_paths:
             command.append(str(path.joinpath('definition.py')))
         command = ' '.join(command)

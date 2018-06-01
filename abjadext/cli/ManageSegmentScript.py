@@ -1,8 +1,7 @@
+import abjad
 import os
 import sys
 import traceback
-from abjad.utilities import String
-import abjad.system
 from .ScorePackageScript import ScorePackageScript
 
 
@@ -45,8 +44,10 @@ class ManageSegmentScript(ScorePackageScript):
                 else:
                     staged_matching_paths.append(path)
         matching_paths = []
-        matching_paths.extend(sorted(staged_matching_paths,
-            key=lambda path: staged_names.index(path.name)))
+        matching_paths.extend(sorted(
+            staged_matching_paths,
+            key=lambda path: staged_names.index(path.name),
+        ))
         matching_paths.extend(sorted(unstaged_matching_paths))
         return matching_paths
 
@@ -56,7 +57,7 @@ class ManageSegmentScript(ScorePackageScript):
             if name not in staged_names:
                 names_list.append('# {}'.format(name))
         names_list = '\n'.join(names_list)
-        contents = String.normalize('''
+        contents = abjad.utilities.String.normalize('''
         {}
 
         # Instructions:
@@ -81,7 +82,7 @@ class ManageSegmentScript(ScorePackageScript):
             collected_names.append(segment_path.name)
             target_path = self._build_path.joinpath(
                 'segments',
-                String(segment_path.name).to_dash_case() + '.ily'
+                abjad.utilities.String(segment_path.name).to_dash_case() + '.ily'
             )
             contents = self._process_illustration_contents(source_path)
             with open(str(target_path), 'w') as file_pointer:
@@ -99,7 +100,7 @@ class ManageSegmentScript(ScorePackageScript):
             for name in staged_names:
                 if name not in collected_names:
                     continue
-                name = String(name).to_dash_case()
+                name = abjad.utilities.String(name).to_dash_case()
                 file_pointer.write(include_template.format(
                     name=name,
                     sep=os.path.sep))
@@ -132,7 +133,6 @@ class ManageSegmentScript(ScorePackageScript):
         ))
 
     def _handle_edit(self, segment_name):
-        from abjad import abjad_configuration
         segment_name = segment_name or '*'
         globbable_names = self._collect_globbable_names(segment_name)
         print('Edit candidates: {!r} ...'.format(
@@ -144,7 +144,7 @@ class ManageSegmentScript(ScorePackageScript):
         if not matching_paths:
             print('    No matching segments.')
             self._handle_list()
-        command = [abjad_configuration.get_text_editor()]
+        command = [abjad.abjad_configuration.get_text_editor()]
         for path in matching_paths:
             command.append(str(path.joinpath('definition.py')))
         command = ' '.join(command)
@@ -213,7 +213,6 @@ class ManageSegmentScript(ScorePackageScript):
             abjad.system.IOManager.open_file(str(pdf_path))
 
     def _handle_stage(self):
-        from abjad import abjad_configuration
         print('Staging segments:')
         all_names = [
             path.name for path in
@@ -227,7 +226,7 @@ class ManageSegmentScript(ScorePackageScript):
                 with open(file_path, 'w') as file_pointer:
                     file_pointer.write(contents)
                 command = '{} {}'.format(
-                    abjad_configuration.get_text_editor(),
+                    abjad.abjad_configuration.get_text_editor(),
                     file_path,
                     )
                 self._call_subprocess(command)
@@ -290,7 +289,7 @@ class ManageSegmentScript(ScorePackageScript):
                     metadata=metadata,
                     previous_metadata=previous_metadata,
                     )
-            except:
+            except Exception:
                 traceback.print_exc()
                 sys.exit(1)
             metadata = segment_maker.metadata

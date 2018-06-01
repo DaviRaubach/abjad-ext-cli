@@ -18,9 +18,7 @@ def test_lilypond_error(paths):
     definition_path = segment_path.joinpath('definition.py')
     with open(str(definition_path), 'w') as file_pointer:
         file_pointer.write(normalize(r'''
-        import abjad.abctools
-        import abjad.core
-        import abjad.lilypondfile
+        import abjad
 
 
         class FaultySegmentMaker(abjad.abctools.AbjadObject):
@@ -127,7 +125,7 @@ def test_python_error_on_illustrate(paths):
     definition_path = segment_path.joinpath('definition.py')
     with open(str(definition_path), 'w') as file_pointer:
         file_pointer.write(normalize(r'''
-        import abjad.abctools
+        import abjad
 
 
         class FaultySegmentMaker(abjad.abctools.AbjadObject):

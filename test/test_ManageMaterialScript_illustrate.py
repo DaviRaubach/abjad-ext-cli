@@ -17,7 +17,7 @@ def test_lilypond_error(paths):
     definition_path = material_path.joinpath('definition.py')
     with open(str(definition_path), 'w') as file_pointer:
         file_pointer.write(normalize(r'''
-        import abjad.lilypondfile
+        import abjad
 
 
         test_material = abjad.lilypondfile.LilyPondFile.new()
@@ -125,10 +125,7 @@ def test_python_error_on_illustrate(paths):
     definition_path = material_path.joinpath('definition.py')
     with open(str(definition_path), 'w') as file_pointer:
         file_pointer.write(normalize(r'''
-        import abjad.abctools
-
-
-        class Foo(object):
+        class Foo:
             def __illustrate__(paths):
                 raise TypeError('This is fake.')
 

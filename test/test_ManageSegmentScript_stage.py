@@ -1,8 +1,8 @@
+import abjad
 import abjadext.cli
 import os
 import pytest
 import uqbar.io
-from abjad import abjad_configuration
 from io import StringIO
 from uqbar.strings import normalize
 
@@ -45,7 +45,7 @@ def test_success(paths, call_subprocess_mock):
         '''.replace('/', os.path.sep),
     )
     call_subprocess_mock.assert_called_with(
-        '{} segments.txt'.format(abjad_configuration.get_text_editor()),
+        '{} segments.txt'.format(abjad.abjad_configuration.get_text_editor()),
     )
     call_subprocess_mock.side_effect = side_effect
     string_io = StringIO()
@@ -68,5 +68,5 @@ def test_success(paths, call_subprocess_mock):
         '''.replace('/', os.path.sep),
     )
     call_subprocess_mock.assert_called_with(
-        '{} segments.txt'.format(abjad_configuration.get_text_editor()),
+        '{} segments.txt'.format(abjad.abjad_configuration.get_text_editor()),
     )

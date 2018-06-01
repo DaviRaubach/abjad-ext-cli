@@ -1,4 +1,5 @@
 import abc
+import abjad
 import collections
 import importlib
 import json
@@ -6,11 +7,9 @@ import os
 import pathlib
 import re
 import shutil
-import sys
 import subprocess
+import sys
 import traceback
-import abjad.system
-from abjad.utilities import String
 from uqbar.cli import CLI
 
 
@@ -75,7 +74,6 @@ class ScorePackageScript(CLI):
 
     @classmethod
     def _get_boilerplate_path(cls):
-        import abjad
         return pathlib.Path(abjad.__path__[0]).joinpath('boilerplate')
 
     @classmethod
@@ -159,7 +157,7 @@ class ScorePackageScript(CLI):
 
     def _name_to_score_subdirectory(self, name, section, score_path):
         score_path = self._path_to_score_package_path(score_path)
-        name = String(name).to_accent_free_snake_case()
+        name = abjad.utilities.String(name).to_accent_free_snake_case()
         path = score_path.joinpath(section, name)
         return path
 
@@ -281,7 +279,7 @@ class ScorePackageScript(CLI):
     def _report_time(self, timer, prefix='Runtime'):
         message = '        {}: {} {}'
         total_time = int(timer.elapsed_time)
-        identifier = String('second').pluralize(total_time)
+        identifier = abjad.utilities.String('second').pluralize(total_time)
         message = message.format(prefix, total_time, identifier)
         print(message)
 
