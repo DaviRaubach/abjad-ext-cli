@@ -18,12 +18,12 @@ def test_lilypond_error(paths):
     definition_path = segment_path.joinpath('definition.py')
     with open(str(definition_path), 'w') as file_pointer:
         file_pointer.write(normalize(r'''
-        from abjad.tools import abctools
-        from abjad.tools import lilypondfiletools
-        from abjad.tools import scoretools
+        import abjad.abctools
+        import abjad.core
+        import abjad.lilypondfile
 
 
-        class FaultySegmentMaker(abctools.AbjadObject):
+        class FaultySegmentMaker(abjad.abctools.AbjadObject):
 
             def run(
                 paths,
@@ -31,8 +31,8 @@ def test_lilypond_error(paths):
                 previous_metadata=None,
                 ):
                 paths.metadata = metadata
-                lilypond_file = lilypondfiletools.LilyPondFile.new(
-                    scoretools.Staff("c'4 ( d'4 e'4 f'4 )")
+                lilypond_file = abjad.lilypondfile.LilyPondFile.new(
+                    abjad.core.Staff("c'4 ( d'4 e'4 f'4 )")
                     )
                 lilypond_file.items.append(r'\this-does-not-exist')
                 return lilypond_file
@@ -127,10 +127,10 @@ def test_python_error_on_illustrate(paths):
     definition_path = segment_path.joinpath('definition.py')
     with open(str(definition_path), 'w') as file_pointer:
         file_pointer.write(normalize(r'''
-        from abjad.tools import abctools
+        import abjad.abctools
 
 
-        class FaultySegmentMaker(abctools.AbjadObject):
+        class FaultySegmentMaker(abjad.abctools.AbjadObject):
 
             def __call__(
                 paths,

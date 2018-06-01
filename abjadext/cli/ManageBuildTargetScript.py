@@ -3,8 +3,8 @@ import os
 import shutil
 import subprocess
 import sys
-from abjad.tools import datastructuretools
-from abjad.tools import systemtools
+from abjad.utilities import String
+import abjad.system
 from .ScorePackageScript import ScorePackageScript
 
 
@@ -156,7 +156,7 @@ class ManageBuildTargetScript(ScorePackageScript):
             name = paper_size.lower().replace(' ', '-')
             name = '{}-{}'.format(name, orientation)
         else:
-            name = datastructuretools.String(target_name).to_dash_case()
+            name = String(target_name).to_dash_case()
         dimensions = self.paper_sizes[paper_size]
         message = 'Creating build target {!r} ({}{} x {}{})'.format(
             name,
@@ -298,7 +298,7 @@ class ManageBuildTargetScript(ScorePackageScript):
         if open_score_only:
             paths_to_open = [build_target_path.joinpath('score.pdf')]
         for path in paths_to_open:
-            systemtools.IOManager.open_file(str(path))
+            abjad.system.IOManager.open_file(str(path))
 
     def _process_args(self, arguments):
         self._setup_paths(arguments.score_path)
@@ -376,7 +376,7 @@ class ManageBuildTargetScript(ScorePackageScript):
         latex_path = latex_path.absolute()
         relative_path = latex_path.relative_to(self._score_package_path)
         command = 'xelatex {!s}'.format(latex_path)
-        with systemtools.TemporaryDirectoryChange(str(latex_path.parent)):
+        with abjad.system.TemporaryDirectoryChange(str(latex_path.parent)):
             for _ in range(2):
                 try:
                     exit_code = subprocess.call(command, shell=True)
@@ -394,7 +394,7 @@ class ManageBuildTargetScript(ScorePackageScript):
             str(lilypond_path).replace('.ly', ''),
             str(lilypond_path),
             )
-        with systemtools.TemporaryDirectoryChange(str(lilypond_path.parent)):
+        with abjad.system.TemporaryDirectoryChange(str(lilypond_path.parent)):
             exit_code = subprocess.call(command, shell=True)
         if exit_code:
             print('    Failed to render: {!s}'.format(

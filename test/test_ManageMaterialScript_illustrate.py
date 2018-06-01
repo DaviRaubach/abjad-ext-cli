@@ -17,10 +17,10 @@ def test_lilypond_error(paths):
     definition_path = material_path.joinpath('definition.py')
     with open(str(definition_path), 'w') as file_pointer:
         file_pointer.write(normalize(r'''
-        from abjad.tools import lilypondfiletools
+        import abjad.lilypondfile
 
 
-        test_material = lilypondfiletools.LilyPondFile.new()
+        test_material = abjad.lilypondfile.LilyPondFile.new()
         test_material.items.append(r'\this-does-not-exist')
         '''))
     script = abjadext.cli.ManageMaterialScript()
@@ -125,7 +125,7 @@ def test_python_error_on_illustrate(paths):
     definition_path = material_path.joinpath('definition.py')
     with open(str(definition_path), 'w') as file_pointer:
         file_pointer.write(normalize(r'''
-        from abjad.tools import abctools
+        import abjad.abctools
 
 
         class Foo(object):

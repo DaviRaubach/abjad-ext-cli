@@ -1,8 +1,8 @@
 import os
 import sys
 import traceback
-from abjad.tools import datastructuretools
-from abjad.tools import systemtools
+from abjad.utilities import String
+import abjad.system
 from .ScorePackageScript import ScorePackageScript
 
 
@@ -56,7 +56,7 @@ class ManageSegmentScript(ScorePackageScript):
             if name not in staged_names:
                 names_list.append('# {}'.format(name))
         names_list = '\n'.join(names_list)
-        contents = datastructuretools.String.normalize('''
+        contents = String.normalize('''
         {}
 
         # Instructions:
@@ -81,7 +81,7 @@ class ManageSegmentScript(ScorePackageScript):
             collected_names.append(segment_path.name)
             target_path = self._build_path.joinpath(
                 'segments',
-                datastructuretools.String(segment_path.name).to_dash_case() + '.ily'
+                String(segment_path.name).to_dash_case() + '.ily'
             )
             contents = self._process_illustration_contents(source_path)
             with open(str(target_path), 'w') as file_pointer:
@@ -99,7 +99,7 @@ class ManageSegmentScript(ScorePackageScript):
             for name in staged_names:
                 if name not in collected_names:
                     continue
-                name = datastructuretools.String(name).to_dash_case()
+                name = String(name).to_dash_case()
                 file_pointer.write(include_template.format(
                     name=name,
                     sep=os.path.sep))
@@ -170,7 +170,7 @@ class ManageSegmentScript(ScorePackageScript):
                 sep=os.path.sep))
         for path in matching_paths:
             pdf_path = path.joinpath('illustration.pdf')
-            systemtools.IOManager.open_file(str(pdf_path))
+            abjad.system.IOManager.open_file(str(pdf_path))
 
     def _handle_list(self):
         print('Available segments:')
@@ -210,7 +210,7 @@ class ManageSegmentScript(ScorePackageScript):
                 sep=os.path.sep))
         for path in matching_paths:
             pdf_path = path.joinpath('illustration.pdf')
-            systemtools.IOManager.open_file(str(pdf_path))
+            abjad.system.IOManager.open_file(str(pdf_path))
 
     def _handle_stage(self):
         from abjad import abjad_configuration
@@ -221,8 +221,8 @@ class ManageSegmentScript(ScorePackageScript):
             ]
         old_staged_names = self._read_segments_list_json()
         contents = self._create_staging_contents(all_names, old_staged_names)
-        with systemtools.TemporaryDirectory() as directory:
-            with systemtools.TemporaryDirectoryChange(directory):
+        with abjad.system.TemporaryDirectory() as directory:
+            with abjad.system.TemporaryDirectoryChange(directory):
                 file_path = 'segments.txt'
                 with open(file_path, 'w') as file_pointer:
                     file_pointer.write(contents)
@@ -284,7 +284,7 @@ class ManageSegmentScript(ScorePackageScript):
         except (ImportError, AttributeError):
             traceback.print_exc()
             sys.exit(1)
-        with systemtools.Timer() as timer:
+        with abjad.system.Timer() as timer:
             try:
                 lilypond_file = segment_maker.run(
                     metadata=metadata,

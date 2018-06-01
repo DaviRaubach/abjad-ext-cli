@@ -9,8 +9,8 @@ import shutil
 import sys
 import subprocess
 import traceback
-from abjad.tools import systemtools
-from abjad.tools import datastructuretools
+import abjad.system
+from abjad.utilities import String
 from uqbar.cli import CLI
 
 
@@ -110,7 +110,7 @@ class ScorePackageScript(CLI):
     def _import_path(self, path, score_root_path, verbose=True):
         if verbose:
             print('    Importing {!s}'.format(path))
-        with systemtools.TemporaryDirectoryChange(str(score_root_path)):
+        with abjad.system.TemporaryDirectoryChange(str(score_root_path)):
             try:
                 importlib.invalidate_caches()
             except Exception:
@@ -159,7 +159,7 @@ class ScorePackageScript(CLI):
 
     def _name_to_score_subdirectory(self, name, section, score_path):
         score_path = self._path_to_score_package_path(score_path)
-        name = datastructuretools.String(name).to_accent_free_snake_case()
+        name = String(name).to_accent_free_snake_case()
         path = score_path.joinpath(section, name)
         return path
 
@@ -281,7 +281,7 @@ class ScorePackageScript(CLI):
     def _report_time(self, timer, prefix='Runtime'):
         message = '        {}: {} {}'
         total_time = int(timer.elapsed_time)
-        identifier = datastructuretools.String('second').pluralize(total_time)
+        identifier = String('second').pluralize(total_time)
         message = message.format(prefix, total_time, identifier)
         print(message)
 
@@ -377,8 +377,8 @@ class ScorePackageScript(CLI):
             str(ly_path).replace('.ly', ''),
             str(ly_path),
             )
-        with systemtools.Timer() as timer:
-            with systemtools.TemporaryDirectoryChange(str(ly_path.parent)):
+        with abjad.system.Timer() as timer:
+            with abjad.system.TemporaryDirectoryChange(str(ly_path.parent)):
                 exit_code = subprocess.call(command, shell=True)
         if exit_code:
             print('Failed!')

@@ -2,7 +2,9 @@ import inspect
 import os
 import sys
 import traceback
-from abjad.tools import systemtools
+import abjad.abctools
+import abjad.system
+from abjad import abjad_configuration
 from .ScorePackageScript import ScorePackageScript
 
 
@@ -57,7 +59,6 @@ class ManageMaterialScript(ScorePackageScript):
             sep=os.path.sep))
 
     def _handle_edit(self, material_name):
-        from abjad import abjad_configuration
         globbable_names = self._collect_globbable_names(material_name)
         print('Edit candidates: {!r} ...'.format(
             ' '.join(globbable_names)))
@@ -90,13 +91,12 @@ class ManageMaterialScript(ScorePackageScript):
                 sep=os.path.sep))
         for path in matching_paths:
             pdf_path = path.joinpath('illustration.pdf')
-            systemtools.IOManager.open_file(str(pdf_path))
+            abjad.system.IOManager.open_file(str(pdf_path))
 
     def _handle_list(self):
-        from abjad.tools import abctools
         basic_bases = (
-            abctools.AbjadObject,
-            abctools.AbjadValueObject,
+            abjad.abctools.AbjadObject,
+            abjad.abctools.AbjadValueObject,
             object,
             )
         print('Available materials:')
@@ -108,15 +108,17 @@ class ManageMaterialScript(ScorePackageScript):
         for material_name, material in all_materials.items():
             class_ = type(material)
             base = class_.__bases__[0]
-            attrs = {attr.name: attr for attr in
-                inspect.classify_class_attrs(class_)}
+            attrs = {
+                attr.name: attr for attr in
+                inspect.classify_class_attrs(class_)
+            }
             if any(_ in class_.__bases__ for _ in basic_bases):
                 base = class_
             elif getattr(class_, '__is_terminal_ajv_list_item__', False) and \
                 attrs['__is_terminal_ajv_list_item__'].defining_class is class_:
                 base = class_
             materials.setdefault(base, []).append((material_name, class_))
-        #valid_paths = self._list_material_subpackages(self._score_package_path)
+        # valid_paths = self._list_material_subpackages(self._score_package_path)
         materials = sorted(materials.items(), key=lambda pair: pair[0].__name__)
         for base, material_names in materials:
             print('    {}:'.format(base.__name__))
@@ -141,7 +143,7 @@ class ManageMaterialScript(ScorePackageScript):
                 sep=os.path.sep))
         for path in matching_paths:
             pdf_path = path.joinpath('illustration.pdf')
-            systemtools.IOManager.open_file(str(pdf_path))
+            abjad.system.IOManager.open_file(str(pdf_path))
 
     def _illustrate_one_material(self, material_directory):
         print('Illustrating {path!s}{sep}'.format(
@@ -153,10 +155,10 @@ class ManageMaterialScript(ScorePackageScript):
             message = template.format(type(material).__name__)
             print(message)
             sys.exit(1)
-        with systemtools.Timer() as timer:
+        with abjad.system.Timer() as timer:
             try:
                 lilypond_file = material.__illustrate__()
-            except:
+            except Exception:
                 traceback.print_exc()
                 sys.exit(1)
         self._report_time(timer, prefix='Abjad runtime')
