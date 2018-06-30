@@ -21,7 +21,7 @@ def test_lilypond_error(paths):
         import abjad
 
 
-        class FaultySegmentMaker(abjad.abctools.AbjadObject):
+        class FaultySegmentMaker(abjad.system.AbjadObject):
 
             def run(
                 paths,
@@ -128,7 +128,7 @@ def test_python_error_on_illustrate(paths):
         import abjad
 
 
-        class FaultySegmentMaker(abjad.abctools.AbjadObject):
+        class FaultySegmentMaker(abjad.system.AbjadObject):
 
             def __call__(
                 paths,
