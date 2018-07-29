@@ -1,3 +1,6 @@
+"""
+Extension for managing score projects on the commandline.
+"""
 from .ManageBuildTargetScript import ManageBuildTargetScript  # noqa
 from .ManageMaterialScript import ManageMaterialScript  # noqa
 from .ManageScoreScript import ManageScoreScript  # noqa
