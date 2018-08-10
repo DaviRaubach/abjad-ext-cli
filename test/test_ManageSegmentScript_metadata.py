@@ -61,63 +61,63 @@ def test_2(paths, open_file_mock):
         \paper {}
         <BLANKLINE>
         \score {
-            \context Score = "String Quartet Score"
-            <<
-                \context StaffGroup = "String Quartet Staff Group"
-                <<
+            \context Score = "String Quartet Score" %! StringQuartetScoreTemplate
+            <<                                      %! StringQuartetScoreTemplate
+                \context StaffGroup = "String Quartet Staff Group" %! StringQuartetScoreTemplate
+                <<                                                 %! StringQuartetScoreTemplate
                     \tag #'first-violin
-                    \context Staff = "First Violin Staff"
-                    {
-                        \context Voice = "First Violin Voice"
-                        {
+                    \context Staff = "First Violin Staff" %! StringQuartetScoreTemplate
+                    {                                     %! StringQuartetScoreTemplate
+                        \context Voice = "First Violin Voice" %! StringQuartetScoreTemplate
+                        {                                     %! StringQuartetScoreTemplate
                             {   % measure
                                 \time 4/4
-                                \clef "treble" %! ST3
+                                \clef "treble" %! attach_defaults
                                 c'1
-                                \bar "|." %! SCORE1
+                                \bar "|." %! SCORE_1
                             }   % measure
-                        }
-                    }
+                        } %! StringQuartetScoreTemplate
+                    } %! StringQuartetScoreTemplate
                     \tag #'second-violin
-                    \context Staff = "Second Violin Staff"
-                    {
-                        \context Voice = "Second Violin Voice"
-                        {
+                    \context Staff = "Second Violin Staff" %! StringQuartetScoreTemplate
+                    {                                      %! StringQuartetScoreTemplate
+                        \context Voice = "Second Violin Voice" %! StringQuartetScoreTemplate
+                        {                                      %! StringQuartetScoreTemplate
                             {   % measure
                                 \time 4/4
-                                \clef "treble" %! ST3
+                                \clef "treble" %! attach_defaults
                                 c'1
-                                \bar "|." %! SCORE1
+                                \bar "|." %! SCORE_1
                             }   % measure
-                        }
-                    }
+                        } %! StringQuartetScoreTemplate
+                    } %! StringQuartetScoreTemplate
                     \tag #'viola
-                    \context Staff = "Viola Staff"
-                    {
-                        \context Voice = "Viola Voice"
-                        {
+                    \context Staff = "Viola Staff" %! StringQuartetScoreTemplate
+                    {                              %! StringQuartetScoreTemplate
+                        \context Voice = "Viola Voice" %! StringQuartetScoreTemplate
+                        {                              %! StringQuartetScoreTemplate
                             {   % measure
                                 \time 4/4
-                                \clef "alto" %! ST3
+                                \clef "alto" %! attach_defaults
                                 c'1
-                                \bar "|." %! SCORE1
+                                \bar "|." %! SCORE_1
                             }   % measure
-                        }
-                    }
+                        } %! StringQuartetScoreTemplate
+                    } %! StringQuartetScoreTemplate
                     \tag #'cello
-                    \context Staff = "Cello Staff"
-                    {
-                        \context Voice = "Cello Voice"
-                        {
+                    \context Staff = "Cello Staff" %! StringQuartetScoreTemplate
+                    {                              %! StringQuartetScoreTemplate
+                        \context Voice = "Cello Voice" %! StringQuartetScoreTemplate
+                        {                              %! StringQuartetScoreTemplate
                             {   % measure
                                 \time 4/4
-                                \clef "bass" %! ST3
+                                \clef "bass" %! attach_defaults
                                 c'1
-                                \bar "|." %! SCORE1
+                                \bar "|." %! SCORE_1
                             }   % measure
-                        }
-                    }
-                >>
-            >>
+                        } %! StringQuartetScoreTemplate
+                    } %! StringQuartetScoreTemplate
+                >> %! StringQuartetScoreTemplate
+            >> %! StringQuartetScoreTemplate
         }
         ''')
