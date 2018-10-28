@@ -269,7 +269,7 @@ def get_fancy_segment_maker_code():
     return uqbar.strings.normalize(r"""
         import abjad
 
-        class SegmentMaker(abjad.AbjadObject):
+        class SegmentMaker(abjad.SegmentMaker):
 
             ### INITIALIZER ###
 
@@ -286,11 +286,12 @@ def get_fancy_segment_maker_code():
                 metadata=None,
                 previous_metadata=None,
                 ):
-                self.metadata = metadata
+                self._metadata = metadata
                 score = self.score_template()
                 for i in range(self.measure_count):
                     for voice in abjad.iterate(score).components(abjad.Voice):
-                        measure = abjad.Measure((4, 4), "c'1")
+                        measure = abjad.Container("c'1")
+                        abjad.attach(abjad.TimeSignature((4, 4)), measure[0])
                         voice.append(measure)
                 self.score_template.attach_defaults(score)
                 lilypond_file = abjad.LilyPondFile.new(

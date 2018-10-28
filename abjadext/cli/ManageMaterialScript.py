@@ -93,8 +93,6 @@ class ManageMaterialScript(ScorePackageScript):
 
     def _handle_list(self):
         basic_bases = (
-            abjad.system.AbjadObject,
-            abjad.system.AbjadValueObject,
             object,
             )
         print('Available materials:')

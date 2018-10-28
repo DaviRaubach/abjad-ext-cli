@@ -21,14 +21,14 @@ def test_lilypond_error(paths):
         import abjad
 
 
-        class FaultySegmentMaker(abjad.system.AbjadObject):
+        class FaultySegmentMaker(abjad.SegmentMaker):
 
             def run(
                 paths,
                 metadata=None,
                 previous_metadata=None,
                 ):
-                paths.metadata = metadata
+                paths._metadata = metadata
                 lilypond_file = abjad.lilypondfile.LilyPondFile.new(
                     abjad.core.Staff("c'4 ( d'4 e'4 f'4 )")
                     )
@@ -128,7 +128,7 @@ def test_python_error_on_illustrate(paths):
         import abjad
 
 
-        class FaultySegmentMaker(abjad.system.AbjadObject):
+        class FaultySegmentMaker(abjad.SegmentMaker):
 
             def __call__(
                 paths,
