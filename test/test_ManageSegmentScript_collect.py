@@ -63,11 +63,11 @@ def test_success(paths, open_file_mock):
     '''.replace('/', os.path.sep))
     path = paths.build_path.joinpath('segments', 'segment-one.ily')
     pytest.helpers.compare_lilypond_contents(path, r'''
-    \context Score = "Example Score"
+    \context Score = "Example_Score"
         <<
-        \context Staff = "Example Staff"
+        \context Staff = "Example_Staff"
         {
-            \context Voice = "Example Voice"
+            \context Voice = "Example_Voice"
             {
                 c'4
                 (
@@ -81,11 +81,11 @@ def test_success(paths, open_file_mock):
     ''')
     path = paths.build_path.joinpath('segments', 'segment-two.ily')
     pytest.helpers.compare_lilypond_contents(path, r'''
-    \context Score = "Example Score"
+    \context Score = "Example_Score"
         <<
-        \context Staff = "Example Staff"
+        \context Staff = "Example_Staff"
         {
-            \context Voice = "Example Voice"
+            \context Voice = "Example_Voice"
             {
                 c'4
                 (
@@ -99,11 +99,11 @@ def test_success(paths, open_file_mock):
     ''')
     path = paths.build_path.joinpath('segments', 'segment-three.ily')
     pytest.helpers.compare_lilypond_contents(path, r'''
-    \context Score = "Example Score"
+    \context Score = "Example_Score"
         <<
-        \context Staff = "Example Staff"
+        \context Staff = "Example_Staff"
             {
-            \context Voice = "Example Voice"
+            \context Voice = "Example_Voice"
             {
                 c'4
                 (

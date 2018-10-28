@@ -384,11 +384,11 @@ def test_success_one_segment(paths, open_file_mock):
             \paper {}
 
             \score { %! LilyPondFile
-                \context Score = "Example Score"
+                \context Score = "Example_Score"
                 <<
-                    \context Staff = "Example Staff"
+                    \context Staff = "Example_Staff"
                     {
-                        \context Voice = "Example Voice"
+                        \context Voice = "Example_Voice"
                         {
                             c'4
                             (
