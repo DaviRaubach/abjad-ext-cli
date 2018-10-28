@@ -63,40 +63,58 @@ def test_success(paths, open_file_mock):
     '''.replace('/', os.path.sep))
     path = paths.build_path.joinpath('segments', 'segment-one.ily')
     pytest.helpers.compare_lilypond_contents(path, r'''
-    \context Score = "Example Score" <<
-        \context Staff = "Example Staff" {
-            \context Voice = "Example Voice" {
-                c'4 (
+    \context Score = "Example Score"
+        <<
+        \context Staff = "Example Staff"
+        {
+            \context Voice = "Example Voice"
+            {
+                c'4
+                (
                 d'4
                 e'4
-                f'4 )
+                f'4
+                )
             }
         }
     >>
+    } %! LilyPondFile
     ''')
     path = paths.build_path.joinpath('segments', 'segment-two.ily')
     pytest.helpers.compare_lilypond_contents(path, r'''
-    \context Score = "Example Score" <<
-        \context Staff = "Example Staff" {
-            \context Voice = "Example Voice" {
-                c'4 (
+    \context Score = "Example Score"
+        <<
+        \context Staff = "Example Staff"
+        {
+            \context Voice = "Example Voice"
+            {
+                c'4
+                (
                 d'4
                 e'4
-                f'4 )
+                f'4
+                )
             }
         }
     >>
+    } %! LilyPondFile
     ''')
     path = paths.build_path.joinpath('segments', 'segment-three.ily')
     pytest.helpers.compare_lilypond_contents(path, r'''
-    \context Score = "Example Score" <<
-        \context Staff = "Example Staff" {
-            \context Voice = "Example Voice" {
-                c'4 (
+    \context Score = "Example Score"
+        <<
+        \context Staff = "Example Staff"
+            {
+            \context Voice = "Example Voice"
+            {
+                c'4
+                (
                 d'4
                 e'4
-                f'4 )
+                f'4
+                )
             }
         }
     >>
+    } %! LilyPondFile
     ''')

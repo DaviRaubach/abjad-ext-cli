@@ -330,7 +330,7 @@ class ManageSegmentScript(ScorePackageScript):
     def _process_illustration_contents(self, ly_path):
         with open(str(ly_path), 'r') as file_pointer:
             contents = file_pointer.read().splitlines()
-        while contents and contents[0] != r'\score {':
+        while contents and contents[0] != r'\score { %! LilyPondFile':
             contents.pop(0)
         contents.pop(0)
         for i in range(len(contents)):
