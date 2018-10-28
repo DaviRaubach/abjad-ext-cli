@@ -334,7 +334,7 @@ class ManageSegmentScript(ScorePackageScript):
             contents.pop(0)
         contents.pop(0)
         for i in range(len(contents)):
-            if contents[i] == '}':
+            if contents[i] == '} %! LilyPondFile':
                 contents = contents[:i]
                 break
         contents = '\n'.join(contents)

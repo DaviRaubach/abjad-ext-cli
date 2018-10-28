@@ -78,7 +78,6 @@ def test_success(paths, open_file_mock):
             }
         }
     >>
-    } %! LilyPondFile
     ''')
     path = paths.build_path.joinpath('segments', 'segment-two.ily')
     pytest.helpers.compare_lilypond_contents(path, r'''
@@ -97,7 +96,6 @@ def test_success(paths, open_file_mock):
             }
         }
     >>
-    } %! LilyPondFile
     ''')
     path = paths.build_path.joinpath('segments', 'segment-three.ily')
     pytest.helpers.compare_lilypond_contents(path, r'''
@@ -116,5 +114,4 @@ def test_success(paths, open_file_mock):
             }
         }
     >>
-    } %! LilyPondFile
     ''')
