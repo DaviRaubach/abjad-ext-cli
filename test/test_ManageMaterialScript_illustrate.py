@@ -45,11 +45,11 @@ def test_lilypond_error(paths):
     assert illustration_ly_path.exists()
     pytest.helpers.compare_lilypond_contents(
         illustration_ly_path, normalize(r'''
-        \language "english"
+        \language "english" %! LilyPondFile
 
-        \header {
+        \header { %! LilyPondFile
             tagline = ##f
-        }
+        } %! LilyPondFile
 
         \layout {}
 
@@ -324,11 +324,11 @@ def test_success_one_material(paths, open_file_mock):
         illustration_path,
         normalize(
             r'''
-            \language "english"
+            \language "english" %! LilyPondFile
 
-            \header {
+            \header { %! LilyPondFile
                 tagline = ##f
-            }
+            } %! LilyPondFile
 
             \layout {}
 

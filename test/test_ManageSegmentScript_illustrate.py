@@ -63,24 +63,27 @@ def test_lilypond_error(paths):
     assert illustration_ly_path.exists()
     pytest.helpers.compare_lilypond_contents(
         illustration_ly_path, normalize(r'''
-        \language "english"
+        \language "english" %! LilyPondFile
 
-        \header {
+        \header { %! LilyPondFile
             tagline = ##f
-        }
+        } %! LilyPondFile
 
         \layout {}
 
         \paper {}
 
-        \score {
-            \new Staff {
-                c'4 (
+        \score { %! LilyPondFile
+            \new Staff
+            {
+                c'4
+                (
                 d'4
                 e'4
-                f'4 )
+                f'4
+                )
             }
-        }
+        } %! LilyPondFile
 
         \this-does-not-exist
         '''))
@@ -368,29 +371,34 @@ def test_success_one_segment(paths, open_file_mock):
         illustration_path,
         normalize(
             r'''
-            \language "english"
+            \language "english" %! LilyPondFile
 
-            \include "../../stylesheets/stylesheet.ily"
+            \include "../../stylesheets/stylesheet.ily" %! LilyPondFile
 
-            \header {
+            \header { %! LilyPondFile
                 tagline = ##f
-            }
+            } %! LilyPondFile
 
             \layout {}
 
             \paper {}
 
-            \score {
-                \context Score = "Example Score" <<
-                    \context Staff = "Example Staff" {
-                        \context Voice = "Example Voice" {
-                            c'4 (
+            \score { %! LilyPondFile
+                \context Score = "Example Score"
+                <<
+                    \context Staff = "Example Staff"
+                    {
+                        \context Voice = "Example Voice"
+                        {
+                            c'4
+                            (
                             d'4
                             e'4
-                            f'4 )
+                            f'4
+                            )
                         }
                     }
                 >>
-            }
+            } %! LilyPondFile
         '''),
     )

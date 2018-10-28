@@ -48,76 +48,76 @@ def test_2(paths, open_file_mock):
     pytest.helpers.compare_lilypond_contents(
         illustration_path,
         r'''
-        \language "english"
+        \language "english" %! LilyPondFile
         <BLANKLINE>
-        \include "../../stylesheets/stylesheet.ily"
+        \include "../../stylesheets/stylesheet.ily" %! LilyPondFile
         <BLANKLINE>
-        \header {
+        \header { %! LilyPondFile
             tagline = ##f
-        }
+        } %! LilyPondFile
         <BLANKLINE>
         \layout {}
         <BLANKLINE>
         \paper {}
         <BLANKLINE>
-        \score {
-            \context Score = "String Quartet Score" %! StringQuartetScoreTemplate
+        \score { %! LilyPondFile
+            \context Score = "String_Quartet_Score" %! StringQuartetScoreTemplate
             <<                                      %! StringQuartetScoreTemplate
-                \context StaffGroup = "String Quartet Staff Group" %! StringQuartetScoreTemplate
+                \context StaffGroup = "String_Quartet_Staff_Group" %! StringQuartetScoreTemplate
                 <<                                                 %! StringQuartetScoreTemplate
                     \tag #'first-violin
-                    \context Staff = "First Violin Staff" %! StringQuartetScoreTemplate
+                    \context Staff = "First_Violin_Staff" %! StringQuartetScoreTemplate
                     {                                     %! StringQuartetScoreTemplate
-                        \context Voice = "First Violin Voice" %! StringQuartetScoreTemplate
+                        \context Voice = "First_Violin_Voice" %! StringQuartetScoreTemplate
                         {                                     %! StringQuartetScoreTemplate
-                            {   % measure
+                            {
                                 \time 4/4
                                 \clef "treble" %! attach_defaults
                                 c'1
                                 \bar "|." %! SCORE_1
-                            }   % measure
+                            }
                         } %! StringQuartetScoreTemplate
                     } %! StringQuartetScoreTemplate
                     \tag #'second-violin
-                    \context Staff = "Second Violin Staff" %! StringQuartetScoreTemplate
+                    \context Staff = "Second_Violin_Staff" %! StringQuartetScoreTemplate
                     {                                      %! StringQuartetScoreTemplate
-                        \context Voice = "Second Violin Voice" %! StringQuartetScoreTemplate
+                        \context Voice = "Second_Violin_Voice" %! StringQuartetScoreTemplate
                         {                                      %! StringQuartetScoreTemplate
-                            {   % measure
+                            {
                                 \time 4/4
                                 \clef "treble" %! attach_defaults
                                 c'1
                                 \bar "|." %! SCORE_1
-                            }   % measure
+                            }
                         } %! StringQuartetScoreTemplate
                     } %! StringQuartetScoreTemplate
                     \tag #'viola
-                    \context Staff = "Viola Staff" %! StringQuartetScoreTemplate
+                    \context Staff = "Viola_Staff" %! StringQuartetScoreTemplate
                     {                              %! StringQuartetScoreTemplate
-                        \context Voice = "Viola Voice" %! StringQuartetScoreTemplate
+                        \context Voice = "Viola_Voice" %! StringQuartetScoreTemplate
                         {                              %! StringQuartetScoreTemplate
-                            {   % measure
+                            {
                                 \time 4/4
                                 \clef "alto" %! attach_defaults
                                 c'1
                                 \bar "|." %! SCORE_1
-                            }   % measure
+                            }
                         } %! StringQuartetScoreTemplate
                     } %! StringQuartetScoreTemplate
                     \tag #'cello
-                    \context Staff = "Cello Staff" %! StringQuartetScoreTemplate
+                    \context Staff = "Cello_Staff" %! StringQuartetScoreTemplate
                     {                              %! StringQuartetScoreTemplate
-                        \context Voice = "Cello Voice" %! StringQuartetScoreTemplate
+                        \context Voice = "Cello_Voice" %! StringQuartetScoreTemplate
                         {                              %! StringQuartetScoreTemplate
-                            {   % measure
+                            {
                                 \time 4/4
                                 \clef "bass" %! attach_defaults
                                 c'1
                                 \bar "|." %! SCORE_1
-                            }   % measure
+                            }
                         } %! StringQuartetScoreTemplate
                     } %! StringQuartetScoreTemplate
                 >> %! StringQuartetScoreTemplate
             >> %! StringQuartetScoreTemplate
-        }
+        } %! LilyPondFile
         ''')
