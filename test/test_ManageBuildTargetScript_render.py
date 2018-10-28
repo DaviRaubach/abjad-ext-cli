@@ -22,6 +22,7 @@ def test_success_all(paths, open_file_mock):
         'test_score/test_score/builds/letter-portrait/preface.tex',
         'test_score/test_score/builds/letter-portrait/score.pdf',
         'test_score/test_score/builds/letter-portrait/score.tex',
+        'test_score/test_score/builds/letter-portrait/stylesheet.ily',
         'test_score/test_score/builds/parts.ily',
         'test_score/test_score/builds/segments.ily',
         'test_score/test_score/builds/segments/.gitignore',
@@ -61,6 +62,7 @@ def test_success_back_cover(paths, open_file_mock):
         'test_score/test_score/builds/letter-portrait/parts.ly',
         'test_score/test_score/builds/letter-portrait/preface.tex',
         'test_score/test_score/builds/letter-portrait/score.tex',
+        'test_score/test_score/builds/letter-portrait/stylesheet.ily',
     ]
     if platform.system().lower() == 'windows':
         expected_files = [
@@ -99,6 +101,7 @@ def test_success_front_cover(paths, open_file_mock):
         'test_score/test_score/builds/letter-portrait/parts.ly',
         'test_score/test_score/builds/letter-portrait/preface.tex',
         'test_score/test_score/builds/letter-portrait/score.tex',
+        'test_score/test_score/builds/letter-portrait/stylesheet.ily',
     ]
     if platform.system().lower() == 'windows':
         expected_files = [
@@ -137,6 +140,7 @@ def test_success_music(paths, open_file_mock):
         'test_score/test_score/builds/letter-portrait/parts.ly',
         'test_score/test_score/builds/letter-portrait/preface.tex',
         'test_score/test_score/builds/letter-portrait/score.tex',
+        'test_score/test_score/builds/letter-portrait/stylesheet.ily',
     ]
     if platform.system().lower() == 'windows':
         expected_files = [
@@ -178,6 +182,7 @@ def test_success_parts(paths, open_file_mock):
         'test_score/test_score/builds/letter-portrait/parts.ly',
         'test_score/test_score/builds/letter-portrait/preface.tex',
         'test_score/test_score/builds/letter-portrait/score.tex',
+        'test_score/test_score/builds/letter-portrait/stylesheet.ily',
     ]
     if platform.system().lower() == 'windows':
         expected_files = [
@@ -216,6 +221,7 @@ def test_success_preface(paths, open_file_mock):
         'test_score/test_score/builds/letter-portrait/preface.pdf',
         'test_score/test_score/builds/letter-portrait/preface.tex',
         'test_score/test_score/builds/letter-portrait/score.tex',
+        'test_score/test_score/builds/letter-portrait/stylesheet.ily',
     ]
     if platform.system().lower() == 'windows':
         expected_files = [

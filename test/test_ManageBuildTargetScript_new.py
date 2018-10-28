@@ -105,6 +105,7 @@ def test_implicit(paths):
         'test_score/test_score/builds/letter-portrait/parts.ly',
         'test_score/test_score/builds/letter-portrait/preface.tex',
         'test_score/test_score/builds/letter-portrait/score.tex',
+        'test_score/test_score/builds/letter-portrait/stylesheet.ily',
         'test_score/test_score/builds/parts.ily',
         'test_score/test_score/builds/segments.ily',
         'test_score/test_score/builds/segments/.gitignore',
@@ -163,7 +164,7 @@ def test_implicit(paths):
 
         #(ly:set-option 'relative-includes #t)
         \include "../../stylesheets/stylesheet.ily"
-        \include "../../stylesheets/parts.ily"
+        \include "stylesheet.ily"
 
         #(set-default-paper-size "letter" 'portrait)
         #(set-global-staff-size 12)

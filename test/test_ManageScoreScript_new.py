@@ -85,7 +85,6 @@ def test_success(paths):
         'test_score/test_score/segments/__init__.py',
         'test_score/test_score/stylesheets/.gitignore',
         'test_score/test_score/stylesheets/nonfirst-segment.ily',
-        'test_score/test_score/stylesheets/parts.ily',
         'test_score/test_score/stylesheets/stylesheet.ily',
         'test_score/test_score/test/.gitignore',
         'test_score/test_score/test/test_materials.py',
