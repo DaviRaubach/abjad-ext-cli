@@ -78,7 +78,11 @@ def collect_segments(test_directory_path):
     command = ["--collect"]
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
-        script(command)
+        try:
+            script(command)
+        except SystemExit as exception:
+            if exception.code:
+                raise RuntimeError("SystemExit: {}".format(exception.code))
 
 
 @pytest.helpers.register
@@ -134,12 +138,13 @@ def create_build_target(test_directory_path, force=False, expect_error=False):
         if expect_error:
             with pytest.raises(SystemExit) as exception_info:
                 script(command)
-            assert exception_info.value.code == 1
+            assert exception_info.valuexception.code == 1
         else:
             try:
                 script(command)
-            except SystemExit:
-                raise RuntimeError("SystemExit")
+            except SystemExit as exception:
+                if exception.code:
+                    raise RuntimeError("SystemExit")
     return score_path / package_name / "builds" / "letter-portrait"
 
 
@@ -156,12 +161,13 @@ def create_material(
         if expect_error:
             with pytest.raises(SystemExit) as exception_info:
                 script(command)
-            assert exception_info.value.code == 1
+            assert exception_info.valuexception.code == 1
         else:
             try:
                 script(command)
-            except SystemExit:
-                raise RuntimeError("SystemExit")
+            except SystemExit as exception:
+                if exception.code:
+                    raise RuntimeError("SystemExit")
     return score_path / package_name / "materials" / material_name
 
 
@@ -190,12 +196,13 @@ def create_score(test_directory_path, force=False, expect_error=False):
         if expect_error:
             with pytest.raises(SystemExit) as exception_info:
                 script(command)
-            assert exception_info.value.code == 1
+            assert exception_info.valuexception.code == 1
         else:
             try:
                 script(command)
-            except SystemExit:
-                raise RuntimeError("SystemExit")
+            except SystemExit as exception:
+                if exception.code:
+                    raise RuntimeError("SystemExit")
 
 
 @pytest.helpers.register
@@ -211,12 +218,13 @@ def create_segment(
         if expect_error:
             with pytest.raises(SystemExit) as exception_info:
                 script(command)
-            assert exception_info.value.code == 1
+            assert exception_info.valuexception.code == 1
         else:
             try:
                 script(command)
-            except SystemExit:
-                raise RuntimeError("SystemExit")
+            except SystemExit as exception:
+                if exception.code:
+                    raise RuntimeError("SystemExit")
     return score_path / package_name / "segments" / segment_name
 
 
@@ -321,8 +329,9 @@ def illustrate_material(test_directory_path, material_name):
     with uqbar.io.DirectoryChange(score_path):
         try:
             script(command)
-        except SystemExit as e:
-            raise RuntimeError("SystemExit: {}".format(e.code))
+        except SystemExit as exception:
+            if exception.code:
+                raise RuntimeError("SystemExit: {}".format(exception.code))
 
 
 @pytest.helpers.register
@@ -333,8 +342,9 @@ def illustrate_segment(test_directory_path, segment_name):
     with uqbar.io.DirectoryChange(score_path):
         try:
             script(command)
-        except SystemExit as e:
-            raise RuntimeError("SystemExit: {}".format(e.code))
+        except SystemExit as exception:
+            if exception.code:
+                raise RuntimeError("SystemExit: {}".format(exception.code))
 
 
 @pytest.helpers.register
@@ -343,7 +353,11 @@ def illustrate_segments(test_directory_path):
     command = ["--illustrate", "*"]
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
-        script(command)
+        try:
+            script(command)
+        except SystemExit as exception:
+            if exception.code:
+                raise RuntimeError("SystemExit: {}".format(exception.code))
 
 
 @pytest.helpers.register

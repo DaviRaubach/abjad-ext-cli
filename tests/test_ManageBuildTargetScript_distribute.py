@@ -31,15 +31,17 @@ def test_success(paths, open_file_mock):
     with uqbar.io.DirectoryChange(paths.score_path):
         try:
             script(command)
-        except SystemExit:
-            raise RuntimeError("SystemExit")
+        except SystemExit as exception:
+            if exception.code:
+                raise RuntimeError("SystemExit")
     command = ["--distribute", "letter-portrait"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
             try:
                 script(command)
-            except SystemExit:
-                raise RuntimeError("SystemExit")
+            except SystemExit as exception:
+                if exception.code:
+                    raise RuntimeError("SystemExit")
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""

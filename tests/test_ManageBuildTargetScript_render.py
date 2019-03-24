@@ -42,8 +42,9 @@ def test_success_all(paths, open_file_mock):
     with uqbar.io.DirectoryChange(paths.score_path):
         try:
             script(command)
-        except SystemExit:
-            raise RuntimeError("SystemExit")
+        except SystemExit as exception:
+            if exception.code:
+                raise RuntimeError("SystemExit")
     pytest.helpers.compare_path_contents(
         paths.build_path, expected_files, paths.test_directory_path
     )
@@ -73,8 +74,9 @@ def test_success_back_cover(paths, open_file_mock):
     with uqbar.io.DirectoryChange(paths.score_path):
         try:
             script(command)
-        except SystemExit:
-            raise RuntimeError("SystemExit")
+        except SystemExit as exception:
+            if exception.code:
+                raise RuntimeError("SystemExit")
     pytest.helpers.compare_path_contents(
         target_path, expected_files, paths.test_directory_path
     )
@@ -104,8 +106,9 @@ def test_success_front_cover(paths, open_file_mock):
     with uqbar.io.DirectoryChange(paths.score_path):
         try:
             script(command)
-        except SystemExit:
-            raise RuntimeError("SystemExit")
+        except SystemExit as exception:
+            if exception.code:
+                raise RuntimeError("SystemExit")
     pytest.helpers.compare_path_contents(
         target_path, expected_files, paths.test_directory_path
     )
@@ -135,8 +138,9 @@ def test_success_music(paths, open_file_mock):
     with uqbar.io.DirectoryChange(paths.score_path):
         try:
             script(command)
-        except SystemExit:
-            raise RuntimeError("SystemExit")
+        except SystemExit as exception:
+            if exception.code:
+                raise RuntimeError("SystemExit")
     pytest.helpers.compare_path_contents(
         target_path, expected_files, paths.test_directory_path
     )
@@ -170,8 +174,9 @@ def test_success_parts(paths, open_file_mock):
     with uqbar.io.DirectoryChange(paths.score_path):
         try:
             script(command)
-        except SystemExit:
-            raise RuntimeError("SystemExit")
+        except SystemExit as exception:
+            if exception.code:
+                raise RuntimeError("SystemExit")
     pytest.helpers.compare_path_contents(
         target_path, expected_files, paths.test_directory_path
     )
@@ -201,8 +206,9 @@ def test_success_preface(paths, open_file_mock):
     with uqbar.io.DirectoryChange(paths.score_path):
         try:
             script(command)
-        except SystemExit:
-            raise RuntimeError("SystemExit")
+        except SystemExit as exception:
+            if exception.code:
+                raise RuntimeError("SystemExit")
     pytest.helpers.compare_path_contents(
         target_path, expected_files, paths.test_directory_path
     )

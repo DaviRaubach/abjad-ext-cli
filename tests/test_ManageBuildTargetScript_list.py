@@ -14,27 +14,31 @@ def test_list(paths):
     with uqbar.io.DirectoryChange(paths.score_path):
         try:
             script(command)
-        except SystemExit:
-            raise RuntimeError("SystemExit")
+        except SystemExit as exception:
+            if exception.code:
+                raise RuntimeError("SystemExit")
     command = ["--new", "medium-version"]
     with uqbar.io.DirectoryChange(paths.score_path):
         try:
             script(command)
-        except SystemExit:
-            raise RuntimeError("SystemExit")
+        except SystemExit as exception:
+            if exception.code:
+                raise RuntimeError("SystemExit")
     command = ["--new", "small-version"]
     with uqbar.io.DirectoryChange(paths.score_path):
         try:
             script(command)
-        except SystemExit:
-            raise RuntimeError("SystemExit")
+        except SystemExit as exception:
+            if exception.code:
+                raise RuntimeError("SystemExit")
     command = ["--list"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
             try:
                 script(command)
-            except SystemExit:
-                raise RuntimeError("SystemExit")
+            except SystemExit as exception:
+                if exception.code:
+                    raise RuntimeError("SystemExit")
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""

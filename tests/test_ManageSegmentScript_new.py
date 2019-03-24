@@ -59,8 +59,9 @@ def test_internal_path(paths):
         with uqbar.io.DirectoryChange(str(internal_path)):
             try:
                 script(command)
-            except SystemExit:
-                raise RuntimeError("SystemExit")
+            except SystemExit as exception:
+                if exception.code:
+                    raise RuntimeError("SystemExit")
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
@@ -82,15 +83,17 @@ def test_success(paths):
     try:
         names = script._read_segments_list_json(paths.score_path, verbose=False)
         assert names == []
-    except SystemExit:
-        raise RuntimeError("SystemExit")
+    except SystemExit as exception:
+        if exception.code:
+            raise RuntimeError("SystemExit")
     command = ["--new", "test_segment"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
             try:
                 script(command)
-            except SystemExit:
-                raise RuntimeError("SystemExit")
+            except SystemExit as exception:
+                if exception.code:
+                    raise RuntimeError("SystemExit")
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
@@ -119,5 +122,6 @@ def test_success(paths):
     try:
         names = script._read_segments_list_json(paths.score_path, verbose=False)
         assert names == ["test_segment"]
-    except SystemExit:
-        raise RuntimeError("SystemExit")
+    except SystemExit as exception:
+        if exception.code:
+            raise RuntimeError("SystemExit")
