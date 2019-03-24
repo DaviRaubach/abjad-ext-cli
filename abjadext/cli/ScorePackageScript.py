@@ -1,5 +1,4 @@
 import abc
-import abjad
 import collections
 import importlib
 import json
@@ -10,18 +9,21 @@ import shutil
 import subprocess
 import sys
 import traceback
+
+import abjad
+
 from uqbar.cli import CLI
 
 
 class ScorePackageScript(CLI):
-    '''
+    """
     Abstract base class for score-package scripts.
-    '''
+    """
 
     # ### CLASS VARIABLES ### #
 
-    _name_re = re.compile('^[a-z][a-z0-9_]*$')
-    config_name = '.abjadrc'
+    _name_re = re.compile("^[a-z][a-z0-9_]*$")
+    config_name = ".abjadrc"
 
     # ### INITIALIZER ### #
 
@@ -38,14 +40,14 @@ class ScorePackageScript(CLI):
     # ### PRIVATE METHODS ### #
 
     def _call_subprocess(self, command):
-        '''Trivial wrapper for mocking purposes.'''
+        """Trivial wrapper for mocking purposes."""
         return subprocess.call(command, shell=True)
 
     def _collect_globbable_names(self, input_names):
         validated_names = []
         for input_name in input_names:
             if not self._name_is_valid_globbable(input_name):
-                print('Cannot glob {!r}'.format(input_name))
+                print("Cannot glob {!r}".format(input_name))
                 sys.exit(1)
             validated_names.append(input_name)
         return validated_names
@@ -53,20 +55,20 @@ class ScorePackageScript(CLI):
     @classmethod
     def _copy_tree(cls, source_directory, target_directory, recurse=True):
         copied_paths = []
-        source_paths = [_ for _ in sorted(source_directory.glob('*'))]
+        source_paths = [_ for _ in sorted(source_directory.glob("*"))]
         if not target_directory.exists():
             target_directory.mkdir(parents=True)
         for source_path in source_paths:
-            if source_path.name == '__pycache__':
+            if source_path.name == "__pycache__":
                 continue
-            elif source_path.suffix == '.pyc':
+            elif source_path.suffix == ".pyc":
                 continue
             source_name = source_path.relative_to(source_directory)
             target_path = target_directory.joinpath(source_name)
             if source_path.is_dir() and recurse:
                 copied_paths.extend(
                     cls._copy_tree(source_path, target_path, recurse=True)
-                    )
+                )
             elif source_path.is_file():
                 shutil.copyfile(str(source_path), str(target_path))
             copied_paths.append(target_path)
@@ -74,11 +76,11 @@ class ScorePackageScript(CLI):
 
     @classmethod
     def _get_boilerplate_path(cls):
-        return pathlib.Path(abjad.__path__[0]).joinpath('boilerplate')
+        return pathlib.Path(abjad.__path__[0]).joinpath("boilerplate")
 
     @classmethod
     def _get_current_working_directory(self):
-        return pathlib.Path('.').absolute()
+        return pathlib.Path(".").absolute()
 
     def _import_all_materials(self, verbose=True):
         materials = collections.OrderedDict()
@@ -89,16 +91,13 @@ class ScorePackageScript(CLI):
         return materials
 
     def _import_material(self, material_directory, verbose=True):
-        material_import_path = self._path_to_packagesystem_path(
-            material_directory)
+        material_import_path = self._path_to_packagesystem_path(material_directory)
         material_name = material_directory.name
-        definition_import_path = material_import_path + '.definition'
+        definition_import_path = material_import_path + ".definition"
         try:
             module = self._import_path(
-                definition_import_path,
-                self._score_repository_path,
-                verbose=verbose,
-                )
+                definition_import_path, self._score_repository_path, verbose=verbose
+            )
             material = getattr(module, material_name)
         except (ImportError, AttributeError):
             traceback.print_exc()
@@ -107,7 +106,7 @@ class ScorePackageScript(CLI):
 
     def _import_path(self, path, score_root_path, verbose=True):
         if verbose:
-            print('    Importing {!s}'.format(path))
+            print("    Importing {!s}".format(path))
         with abjad.system.TemporaryDirectoryChange(str(score_root_path)):
             try:
                 importlib.invalidate_caches()
@@ -126,32 +125,34 @@ class ScorePackageScript(CLI):
         materials_path = self._materials_path
         if score_path:
             score_path = self._path_to_score_package_path(score_path)
-            materials_path = score_path.joinpath('materials')
+            materials_path = score_path.joinpath("materials")
         paths = [
-            path for path in sorted(materials_path.glob('*'))
-            if path.is_dir() and path.joinpath('__init__.py').exists()
-            ]
+            path
+            for path in sorted(materials_path.glob("*"))
+            if path.is_dir() and path.joinpath("__init__.py").exists()
+        ]
         return sorted(paths)
 
     def _list_segment_subpackages(self, score_path=None):
         if score_path:
             score_path = self._path_to_score_package_path(score_path)
-            segments_path = score_path.joinpath('segments')
+            segments_path = score_path.joinpath("segments")
         else:
             segments_path = self._segments_path
         paths = [
-            path for path in sorted(segments_path.glob('*'))
-            if path.is_dir() and path.joinpath('__init__.py').exists()
-            ]
+            path
+            for path in sorted(segments_path.glob("*"))
+            if path.is_dir() and path.joinpath("__init__.py").exists()
+        ]
         return sorted(paths)
 
     @classmethod
     def _name_is_valid_globbable(cls, name):
-        if '..' in name:
+        if ".." in name:
             return False
-        elif '**' in name:
+        elif "**" in name:
             return False
-        elif '/' in name:
+        elif "/" in name:
             return False
         return True
 
@@ -166,7 +167,7 @@ class ScorePackageScript(CLI):
         relative_path = path.relative_to(score_package_path)
         parts = [score_package_path.name]
         parts.extend(relative_path.parts)
-        return '.'.join(parts)
+        return ".".join(parts)
 
     def _path_to_score_package_path(self, path):
         if isinstance(path, str):
@@ -175,10 +176,10 @@ class ScorePackageScript(CLI):
                 try:
                     importlib.invalidate_caches()
                     module = importlib.import_module(path)
-                    path = getattr(module, '__file__', None)  # A module.
+                    path = getattr(module, "__file__", None)  # A module.
                     if path is None:
-                        path = getattr(module, '__path__')  # A package.
-                    if hasattr(path, '_path'):  # A local import.
+                        path = getattr(module, "__path__")  # A package.
+                    if hasattr(path, "_path"):  # A local import.
                         path = path._path
                     if not isinstance(path, str):  # If it's a package...
                         path = path[0]  # Get the first path in the list.
@@ -198,55 +199,55 @@ class ScorePackageScript(CLI):
         #   - score_root
         #   - score_root/score/builds/build_target
         #   - score_root/score/etc
-        if not path.joinpath('__init__.py').exists():
-            if path.joinpath(path.name, '__init__.py').exists():
+        if not path.joinpath("__init__.py").exists():
+            if path.joinpath(path.name, "__init__.py").exists():
                 pass
-            elif path.parent.joinpath('__init__.py').exists():
+            elif path.parent.joinpath("__init__.py").exists():
                 path = path.parent
-            elif path.parent.parent.joinpath('__init__.py').exists():
+            elif path.parent.parent.joinpath("__init__.py").exists():
                 path = path.parent.parent
         # Drill down as long as we're inside a Python package.
-        while path.joinpath('__init__.py').exists():
+        while path.joinpath("__init__.py").exists():
             path = path.parent
         path = path.joinpath(path.name)
         # Make sure the directory even exists.
         if not path.exists():
-            print('No score matching {!r} exists.'.format(path))
+            print("No score matching {!r} exists.".format(path))
             sys.exit(1)
         # Check for mandatory files and subdirectories.
         if (
-            not path.joinpath('__init__.py').exists() or
-            not path.joinpath('materials').exists() or
-            not path.joinpath('segments').exists() or
-            not path.joinpath('builds').exists() or
-            not path.joinpath('tools').exists()
+            not path.joinpath("__init__.py").exists()
+            or not path.joinpath("materials").exists()
+            or not path.joinpath("segments").exists()
+            or not path.joinpath("builds").exists()
+            or not path.joinpath("tools").exists()
         ):
-            print('Score directory {!r} is malformed.'.format(path))
+            print("Score directory {!r} is malformed.".format(path))
             sys.exit(1)
         return path
 
     def _read_json(self, path, strict=False, verbose=True):
         if verbose:
-            message = '    Reading {!s} ... '
+            message = "    Reading {!s} ... "
             path_to_print = path.relative_to(self._score_package_path.parent)
-            print(message.format(path_to_print), end='')
+            print(message.format(path_to_print), end="")
         if not path.exists():
             if verbose:
-                print('JSON does not exist.')
+                print("JSON does not exist.")
             if strict:
                 sys.exit(1)
             return {}
         try:
-            with open(str(path), 'r') as file_pointer:
+            with open(str(path), "r") as file_pointer:
                 argument = json.loads(file_pointer.read())
         except Exception:
             if verbose:
-                print('JSON is corrupted.')
+                print("JSON is corrupted.")
             if strict:
                 sys.exit(1)
             return {}
         if verbose:
-            print('OK!')
+            print("OK!")
         return argument
 
     def _read_score_metadata_json(self, score_path=None, verbose=True):
@@ -254,7 +255,7 @@ class ScorePackageScript(CLI):
             score_path = self._path_to_score_package_path(score_path)
         else:
             score_path = self._score_package_path
-        metadata_path = score_path.joinpath('metadata.json')
+        metadata_path = score_path.joinpath("metadata.json")
         metadata = self._read_json(metadata_path, verbose=verbose)
         assert isinstance(metadata, dict)
         return metadata
@@ -264,47 +265,45 @@ class ScorePackageScript(CLI):
             score_path = self._path_to_score_package_path(score_path)
         else:
             score_path = self._score_package_path
-        listing_path = score_path.joinpath('segments', 'metadata.json')
+        listing_path = score_path.joinpath("segments", "metadata.json")
         segment_paths = self._list_segment_subpackages(score_path)
         valid_segment_names = [_.name for _ in segment_paths]
         argument = self._read_json(listing_path, verbose=verbose)
-        segment_names = argument.get('segments', [])
+        segment_names = argument.get("segments", [])
         if not isinstance(segment_names, list):
             if verbose:
-                print('    Segments listing is malformed.')
+                print("    Segments listing is malformed.")
             return []
         segment_names = [_ for _ in segment_names if _ in valid_segment_names]
         return segment_names
 
-    def _report_time(self, timer, prefix='Runtime'):
-        message = '        {}: {} {}'
+    def _report_time(self, timer, prefix="Runtime"):
+        message = "        {}: {} {}"
         total_time = int(timer.elapsed_time)
-        identifier = abjad.utilities.String('second').pluralize(total_time)
+        identifier = abjad.utilities.String("second").pluralize(total_time)
         message = message.format(prefix, total_time, identifier)
         print(message)
 
     @abc.abstractmethod
     def _setup_argument_parser(self, parser):
         parser.add_argument(
-            '-s', '--score-path',
-            metavar='SCORE_PATH',
-            default=os.path.curdir,
-            )
+            "-s", "--score-path", metavar="SCORE_PATH", default=os.path.curdir
+        )
 
     def _setup_paths(self, score_path):
         score_package_path = self._path_to_score_package_path(score_path)
         self._score_package_path = score_package_path
         self._score_repository_path = score_package_path.parent
         self._root_parent_path = self._score_repository_path.parent
-        self._build_path = self._score_package_path.joinpath('builds')
-        self._distribution_path = self._score_package_path.joinpath('distribution')
-        self._segments_path = self._score_package_path.joinpath('segments')
-        self._materials_path = self._score_package_path.joinpath('materials')
+        self._build_path = self._score_package_path.joinpath("builds")
+        self._distribution_path = self._score_package_path.joinpath("distribution")
+        self._segments_path = self._score_package_path.joinpath("segments")
+        self._materials_path = self._score_package_path.joinpath("materials")
 
     @classmethod
     def _template_file(cls, file_path, **keywords):
         file_path = str(file_path)
-        with open(file_path, 'r') as file_pointer:
+        with open(file_path, "r") as file_pointer:
             template = file_pointer.read()
         try:
             completed_template = template.format(**keywords)
@@ -315,81 +314,66 @@ class ScorePackageScript(CLI):
                     lines[i] = line.format(**keywords)
                 except (KeyError, IndexError, ValueError):
                     pass
-            completed_template = '\n'.join(lines)
-        with open(file_path, 'w') as file_pointer:
+            completed_template = "\n".join(lines)
+        with open(file_path, "w") as file_pointer:
             file_pointer.write(completed_template)
 
     def _write_json(self, argument, path, verbose=True):
         if verbose:
-            message = '    Writing {!s}'
+            message = "    Writing {!s}"
             path_to_print = path.relative_to(self._score_repository_path)
             print(message.format(path_to_print))
         contents = json.dumps(
-            argument,
-            sort_keys=True,
-            indent=4,
-            separators=(',', ': '),
-            )
+            argument, sort_keys=True, indent=4, separators=(",", ": ")
+        )
         should_write = True
         if path.exists():
-            with open(str(path), 'r') as file_pointer:
+            with open(str(path), "r") as file_pointer:
                 if file_pointer.read() == contents:
                     should_write = False
         if should_write:
-            with open(str(path), 'w') as file_pointer:
+            with open(str(path), "w") as file_pointer:
                 file_pointer.write(contents)
 
-    def _write_lilypond_ly(
-        self,
-        lilypond_file,
-        output_directory,
-    ):
-        ly_path = output_directory.joinpath('illustration.ly')
-        message = '    Writing {!s} ... '
+    def _write_lilypond_ly(self, lilypond_file, output_directory):
+        ly_path = output_directory.joinpath("illustration.ly")
+        message = "    Writing {!s} ... "
         message = message.format(ly_path.relative_to(self._score_repository_path))
-        print(message, end='')
+        print(message, end="")
         try:
             lilypond_format = format(lilypond_file)
         except Exception:
-            print('Failed!')
+            print("Failed!")
             traceback.print_exc()
             sys.exit(1)
-        with open(str(ly_path), 'w') as file_pointer:
+        with open(str(ly_path), "w") as file_pointer:
             file_pointer.write(lilypond_format)
-        print('OK!')
+        print("OK!")
         return ly_path
 
-    def _write_lilypond_pdf(
-        self,
-        ly_path,
-        output_directory,
-    ):
-        pdf_path = output_directory.joinpath('illustration.pdf')
-        message = '    Writing {!s} ... '
-        message = message.format(
-            pdf_path.relative_to(self._score_repository_path)
-            )
-        print(message, end='')
-        command = '{} -dno-point-and-click -o {} {}'.format(
-            'lilypond',
-            str(ly_path).replace('.ly', ''),
-            str(ly_path),
-            )
+    def _write_lilypond_pdf(self, ly_path, output_directory):
+        pdf_path = output_directory.joinpath("illustration.pdf")
+        message = "    Writing {!s} ... "
+        message = message.format(pdf_path.relative_to(self._score_repository_path))
+        print(message, end="")
+        command = "{} -dno-point-and-click -o {} {}".format(
+            "lilypond", str(ly_path).replace(".ly", ""), str(ly_path)
+        )
         with abjad.system.Timer() as timer:
             with abjad.system.TemporaryDirectoryChange(str(ly_path.parent)):
                 exit_code = subprocess.call(command, shell=True)
         if exit_code:
-            print('Failed!')
+            print("Failed!")
             sys.exit(1)
-        print('OK!')
-        self._report_time(timer, prefix='LilyPond runtime')
+        print("OK!")
+        self._report_time(timer, prefix="LilyPond runtime")
 
     def _write_score_metadata_json(self, score_path=None, verbose=True, **keywords):
         if score_path:
             score_path = self._path_to_score_package_path(score_path)
         else:
             score_path = self._score_package_path
-        metadata_path = score_path.joinpath('metadata.json')
+        metadata_path = score_path.joinpath("metadata.json")
         self._write_json(keywords, metadata_path, verbose=verbose)
 
     def _write_segments_list_json(self, segment_names, score_path=None, verbose=True):
@@ -397,9 +381,9 @@ class ScorePackageScript(CLI):
             score_path = self._path_to_score_package_path(score_path)
         else:
             score_path = self._score_package_path
-        listing_path = score_path.joinpath('segments', 'metadata.json')
+        listing_path = score_path.joinpath("segments", "metadata.json")
         segment_paths = self._list_segment_subpackages(score_path)
         valid_segment_names = set(_.name for _ in segment_paths)
         segment_names = [_ for _ in segment_names if _ in valid_segment_names]
-        argument = {'segments': segment_names}
+        argument = {"segments": segment_names}
         self._write_json(argument, listing_path, verbose=verbose)

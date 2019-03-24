@@ -1,31 +1,35 @@
-import abjadext.cli
 import os
 import platform
-import pytest
-import uqbar.io
 from io import StringIO
+
+import pytest
+
+import abjadext.cli
+import uqbar.io
 
 
 def test_exists(paths):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
     script = abjadext.cli.ManageBuildTargetScript()
-    command = ['--new']
+    command = ["--new"]
     with uqbar.io.DirectoryChange(paths.score_path):
         try:
             script(command)
         except SystemExit:
-            raise RuntimeError('SystemExit')
+            raise RuntimeError("SystemExit")
         with uqbar.io.RedirectedStreams(stdout=string_io):
             with pytest.raises(SystemExit) as exception_info:
                 script(command)
             assert exception_info.value.code == 1
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Creating build target 'letter-portrait' (8.5in x 11.0in)
             Path exists: test_score/builds/letter-portrait
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
 
 
@@ -33,27 +37,27 @@ def test_explicit(paths):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
     script = abjadext.cli.ManageBuildTargetScript()
-    command = [
-        '--new',
-        '--paper-size', 'a3',
-        '--orientation', 'landscape',
-    ]
+    command = ["--new", "--paper-size", "a3", "--orientation", "landscape"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
             try:
                 script(command)
             except SystemExit:
-                raise RuntimeError('SystemExit')
+                raise RuntimeError("SystemExit")
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Creating build target 'a3-landscape' (297mm x 420mm)
             Reading test_score/metadata.json ... OK!
             Created test_score/builds/a3-landscape
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
-    path = paths.build_path.joinpath('a3-landscape', 'score.tex')
-    pytest.helpers.compare_lilypond_contents(path, r'''
+    path = paths.build_path.joinpath("a3-landscape", "score.tex")
+    pytest.helpers.compare_lilypond_contents(
+        path,
+        r"""
         \documentclass{article}
         \usepackage[papersize={420mm, 297mm}]{geometry}
         \usepackage{pdfpages}
@@ -65,81 +69,83 @@ def test_explicit(paths):
         \includepdf[pages=-]{back-cover.pdf}
 
         \end{document}
-    ''')
+    """,
+    )
 
 
 def test_force_replace(paths):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
     script = abjadext.cli.ManageBuildTargetScript()
-    command = ['-f', '--new']
+    command = ["-f", "--new"]
     with uqbar.io.DirectoryChange(paths.score_path):
         try:
             script(command)
         except SystemExit:
-            raise RuntimeError('SystemExit')
+            raise RuntimeError("SystemExit")
         with uqbar.io.RedirectedStreams(stdout=string_io):
             try:
                 script(command)
             except SystemExit:
-                raise RuntimeError('SystemExit')
+                raise RuntimeError("SystemExit")
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Creating build target 'letter-portrait' (8.5in x 11.0in)
             Reading test_score/metadata.json ... OK!
             Created test_score/builds/letter-portrait
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
 
 
 def test_implicit(paths):
     expected_files = [
-        'test_score/test_score/builds/.gitignore',
-        'test_score/test_score/builds/assets/.gitignore',
-        'test_score/test_score/builds/assets/instrumentation.tex',
-        'test_score/test_score/builds/assets/performance-notes.tex',
-        'test_score/test_score/builds/letter-portrait/back-cover.tex',
-        'test_score/test_score/builds/letter-portrait/front-cover.tex',
-        'test_score/test_score/builds/letter-portrait/music.ly',
-        'test_score/test_score/builds/letter-portrait/parts.ly',
-        'test_score/test_score/builds/letter-portrait/preface.tex',
-        'test_score/test_score/builds/letter-portrait/score.tex',
-        'test_score/test_score/builds/letter-portrait/stylesheet.ily',
-        'test_score/test_score/builds/parts.ily',
-        'test_score/test_score/builds/segments.ily',
-        'test_score/test_score/builds/segments/.gitignore',
+        "test_score/test_score/builds/.gitignore",
+        "test_score/test_score/builds/assets/.gitignore",
+        "test_score/test_score/builds/assets/instrumentation.tex",
+        "test_score/test_score/builds/assets/performance-notes.tex",
+        "test_score/test_score/builds/letter-portrait/back-cover.tex",
+        "test_score/test_score/builds/letter-portrait/front-cover.tex",
+        "test_score/test_score/builds/letter-portrait/music.ly",
+        "test_score/test_score/builds/letter-portrait/parts.ly",
+        "test_score/test_score/builds/letter-portrait/preface.tex",
+        "test_score/test_score/builds/letter-portrait/score.tex",
+        "test_score/test_score/builds/letter-portrait/stylesheet.ily",
+        "test_score/test_score/builds/parts.ily",
+        "test_score/test_score/builds/segments.ily",
+        "test_score/test_score/builds/segments/.gitignore",
     ]
-    if platform.system().lower() == 'windows':
-        expected_files = [
-            _.replace('/', os.path.sep)
-            for _ in expected_files
-        ]
+    if platform.system().lower() == "windows":
+        expected_files = [_.replace("/", os.path.sep) for _ in expected_files]
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
     script = abjadext.cli.ManageBuildTargetScript()
-    command = ['--new']
+    command = ["--new"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
             try:
                 script(command)
             except SystemExit:
-                raise RuntimeError('SystemExit')
+                raise RuntimeError("SystemExit")
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Creating build target 'letter-portrait' (8.5in x 11.0in)
             Reading test_score/metadata.json ... OK!
             Created test_score/builds/letter-portrait
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
     pytest.helpers.compare_path_contents(
-        paths.build_path,
-        expected_files,
-        paths.test_directory_path,
+        paths.build_path, expected_files, paths.test_directory_path
     )
-    path = paths.build_path.joinpath('letter-portrait', 'music.ly')
-    pytest.helpers.compare_lilypond_contents(path, r'''
+    path = paths.build_path.joinpath("letter-portrait", "music.ly")
+    pytest.helpers.compare_lilypond_contents(
+        path,
+        r"""
         \language "english"
 
         #(ly:set-option 'relative-includes #t)
@@ -157,9 +163,12 @@ def test_implicit(paths):
         \score {
             \include "../segments.ily"
         }
-    ''')
-    path = paths.build_path.joinpath('letter-portrait', 'parts.ly')
-    pytest.helpers.compare_lilypond_contents(path, r'''
+    """,
+    )
+    path = paths.build_path.joinpath("letter-portrait", "parts.ly")
+    pytest.helpers.compare_lilypond_contents(
+        path,
+        r"""
         \language "english"
 
         #(ly:set-option 'relative-includes #t)
@@ -170,9 +179,12 @@ def test_implicit(paths):
         #(set-global-staff-size 12)
 
         \include "../parts.ily"
-    ''')
-    path = paths.build_path.joinpath('letter-portrait', 'score.tex')
-    pytest.helpers.compare_lilypond_contents(path, r'''
+    """,
+    )
+    path = paths.build_path.joinpath("letter-portrait", "score.tex")
+    pytest.helpers.compare_lilypond_contents(
+        path,
+        r"""
         \documentclass{article}
         \usepackage[papersize={8.5in, 11.0in}]{geometry}
         \usepackage{pdfpages}
@@ -184,9 +196,12 @@ def test_implicit(paths):
         \includepdf[pages=-]{back-cover.pdf}
 
         \end{document}
-    ''')
-    path = paths.build_path.joinpath('letter-portrait', 'front-cover.tex')
-    pytest.helpers.compare_lilypond_contents(path, r"""
+    """,
+    )
+    path = paths.build_path.joinpath("letter-portrait", "front-cover.tex")
+    pytest.helpers.compare_lilypond_contents(
+        path,
+        r"""
     \documentclass[11pt]{report}
     <BLANKLINE>
     \usepackage[T1]{fontenc}
@@ -252,9 +267,12 @@ def test_implicit(paths):
     <BLANKLINE>
         \end{titlepage}
     \end{document}
-    """)
-    path = paths.build_path.joinpath('letter-portrait', 'back-cover.tex')
-    pytest.helpers.compare_lilypond_contents(path, r'''
+    """,
+    )
+    path = paths.build_path.joinpath("letter-portrait", "back-cover.tex")
+    pytest.helpers.compare_lilypond_contents(
+        path,
+        r"""
     \documentclass[11pt]{report}
 
     \usepackage[utf8]{inputenc}
@@ -300,29 +318,32 @@ def test_implicit(paths):
 
         \end{titlepage}
     \end{document}
-    ''')
+    """,
+    )
 
 
 def test_internal_path(paths):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
     script = abjadext.cli.ManageBuildTargetScript()
-    command = ['--new']
-    internal_path = paths.score_path.joinpath('test_score', 'builds')
+    command = ["--new"]
+    internal_path = paths.score_path.joinpath("test_score", "builds")
     assert internal_path.exists()
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(str(internal_path)):
             try:
                 script(command)
             except SystemExit:
-                raise RuntimeError('SystemExit')
+                raise RuntimeError("SystemExit")
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Creating build target 'letter-portrait' (8.5in x 11.0in)
             Reading test_score/metadata.json ... OK!
             Created test_score/builds/letter-portrait
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
 
 
@@ -331,22 +352,26 @@ def test_named(paths):
     pytest.helpers.create_score(paths.test_directory_path)
     script = abjadext.cli.ManageBuildTargetScript()
     command = [
-        '--new',
-        'World Premiere Version',
-        '--paper-size', 'a3',
-        '--orientation', 'landscape',
+        "--new",
+        "World Premiere Version",
+        "--paper-size",
+        "a3",
+        "--orientation",
+        "landscape",
     ]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
             try:
                 script(command)
             except SystemExit:
-                raise RuntimeError('SystemExit')
+                raise RuntimeError("SystemExit")
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Creating build target 'world-premiere-version' (297mm x 420mm)
             Reading test_score/metadata.json ... OK!
             Created test_score/builds/world-premiere-version
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
