@@ -29,16 +29,19 @@ if __name__ == '__main__':
             ],
         extras_require={
             'test': [
-                'mypy',
+                "black",
+                "flake8",
+                "isort",
+                "mypy >= 0.660",
+                "pytest >= 4.1.0",
+                "pytest-cov >= 2.6.0",
                 'pytest-helpers-namespace',
-                'pytest >= 3.5.0',
-                'pytest-cov',
                 ],
             },
         include_package_data=True,
         install_requires=[
             'abjad >= 2.21',
-            'uqbar >= 0.2.12',
+            'uqbar >= 0.3.1',
             ],
         license='MIT',
         long_description=pathlib.Path('README.md').read_text(),
