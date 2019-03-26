@@ -1,37 +1,38 @@
-import abjadext.cli
 import doctest
 import pathlib
-import pytest
 import re
 import shutil
 import sys
 import types
-import uqbar.io
-import uqbar.strings
 from unittest import mock
 
+import abjadext.cli
+import pytest
+import uqbar.io
+import uqbar.strings
 
-pytest_plugins = ['helpers_namespace']
+pytest_plugins = ["helpers_namespace"]
 
 
 # ### DATA ### #
 
-ansi_escape = re.compile(r'\x1b[^m]*m')
-package_name = 'test_score'
+ansi_escape = re.compile(r"\x1b[^m]*m")
+package_name = "test_score"
 
 
 # ### FIXTURES ### #
 
+
 @pytest.fixture
 def call_subprocess_mock():
-    patcher = mock.patch('abjadext.cli.ScorePackageScript._call_subprocess')
+    patcher = mock.patch("abjadext.cli.ScorePackageScript._call_subprocess")
     yield patcher.start()
     patcher.stop()
 
 
 @pytest.fixture
 def open_file_mock():
-    patcher = mock.patch('abjad.IOManager.open_file')
+    patcher = mock.patch("abjad.IOManager.open_file")
     yield patcher.start()
     patcher.stop()
 
@@ -41,11 +42,11 @@ def paths(tmpdir):
     test_directory_path = pathlib.Path(tmpdir)
     score_path = test_directory_path / package_name
     inner_path = score_path / package_name
-    build_path = inner_path / 'builds'
-    distribution_path = inner_path / 'distribution'
-    materials_path = inner_path / 'materials'
-    segments_path = inner_path / 'segments'
-    tools_path = inner_path / 'tools'
+    build_path = inner_path / "builds"
+    distribution_path = inner_path / "distribution"
+    materials_path = inner_path / "materials"
+    segments_path = inner_path / "segments"
+    tools_path = inner_path / "tools"
     paths = types.SimpleNamespace(
         test_directory_path=test_directory_path,
         score_path=score_path,
@@ -64,7 +65,7 @@ def paths(tmpdir):
         if not path or not module:
             continue
         if path.startswith(package_name):
-            del(sys.modules[path])
+            del sys.modules[path]
 
 
 # ### HELPERS ### #
@@ -73,56 +74,48 @@ def paths(tmpdir):
 @pytest.helpers.register
 def collect_segments(test_directory_path):
     script = abjadext.cli.ManageSegmentScript()
-    command = ['--collect']
+    command = ["--collect"]
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
-        script(command)
+        run_script(script, command)
 
 
 @pytest.helpers.register
 def compare_lilypond_contents(ly_path, expected_contents):
     expected_contents = uqbar.strings.normalize(expected_contents)
-    with open(str(ly_path), 'r') as file_pointer:
+    with open(str(ly_path), "r") as file_pointer:
         contents = file_pointer.read()
-    if ly_path.suffix == '.ly':
+    if ly_path.suffix == ".ly":
         contents = contents.splitlines()
-        while 'version' not in contents[0]:
+        while "version" not in contents[0]:
             contents.pop(0)
         contents.pop(0)
-        contents = '\n'.join(contents)
+        contents = "\n".join(contents)
     contents = uqbar.strings.normalize(contents)
-    pytest.helpers.compare_strings(
-        expected=expected_contents,
-        actual=contents,
-    )
+    pytest.helpers.compare_strings(expected=expected_contents, actual=contents)
 
 
 @pytest.helpers.register
 def compare_path_contents(path_to_search, expected_files, test_path):
     actual_files = sorted(
         str(path.relative_to(test_path))
-        for path in sorted(path_to_search.glob('**/*.*'))
-        if '__pycache__' not in path.parts and
-        path.suffix != '.pyc'
+        for path in sorted(path_to_search.glob("**/*.*"))
+        if "__pycache__" not in path.parts and path.suffix != ".pyc"
     )
     pytest.helpers.compare_strings(
-        actual='\n'.join(str(_) for _ in actual_files),
-        expected='\n'.join(str(_) for _ in expected_files),
+        actual="\n".join(str(_) for _ in actual_files),
+        expected="\n".join(str(_) for _ in expected_files),
     )
 
 
 @pytest.helpers.register
-def compare_strings(*, expected='', actual=''):
-    actual = uqbar.strings.normalize(ansi_escape.sub('', actual))
-    expected = uqbar.strings.normalize(ansi_escape.sub('', expected))
+def compare_strings(*, expected="", actual=""):
+    actual = uqbar.strings.normalize(ansi_escape.sub("", actual))
+    expected = uqbar.strings.normalize(ansi_escape.sub("", expected))
     example = types.SimpleNamespace()
     example.want = expected
     output_checker = doctest.OutputChecker()
-    flags = (
-        doctest.NORMALIZE_WHITESPACE |
-        doctest.ELLIPSIS |
-        doctest.REPORT_NDIFF
-    )
+    flags = doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS | doctest.REPORT_NDIFF
     success = output_checker.check_output(expected, actual, flags)
     if not success:
         diff = output_checker.output_difference(example, actual, flags)
@@ -130,109 +123,74 @@ def compare_strings(*, expected='', actual=''):
 
 
 @pytest.helpers.register
-def create_build_target(
-    test_directory_path,
-    force=False,
-    expect_error=False,
-):
+def create_build_target(test_directory_path, force=False, expect_error=False):
     script = abjadext.cli.ManageBuildTargetScript()
-    command = ['--new']
+    command = ["--new"]
     if force:
-        command.insert(0, '-f')
+        command.insert(0, "-f")
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
-        if expect_error:
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
-        else:
-            try:
-                script(command)
-            except SystemExit:
-                raise RuntimeError('SystemExit')
-    return score_path / package_name / 'builds' / 'letter-portrait'
+        run_script(script, command, expect_error=expect_error)
+    return score_path / package_name / "builds" / "letter-portrait"
 
 
 @pytest.helpers.register
 def create_material(
-    test_directory_path,
-    material_name='test_material',
-    force=False,
-    expect_error=False,
+    test_directory_path, material_name="test_material", force=False, expect_error=False
 ):
     script = abjadext.cli.ManageMaterialScript()
-    command = ['--new', material_name]
+    command = ["--new", material_name]
     if force:
-        command.insert(0, '-f')
+        command.insert(0, "-f")
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
-        if expect_error:
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
-        else:
-            try:
-                script(command)
-            except SystemExit:
-                raise RuntimeError('SystemExit')
-    return score_path / package_name / 'materials' / material_name
+        run_script(script, command, expect_error=expect_error)
+    return score_path / package_name / "materials" / material_name
 
 
 @pytest.helpers.register
 def create_score(test_directory_path, force=False, expect_error=False):
     script = abjadext.cli.ManageScoreScript()
     command = [
-        '--new',
-        'Test Score',
-        '-y', '2016',
-        '-n', 'Josiah Wolf Oberholtzer',
-        '-e', 'josiah.oberholtzer@gmail.com',
-        '-g', 'josiah-wolf-oberholtzer',
-        '-l', 'consort',
-        '-w', 'www.josiahwolfoberholtzer.com',
+        "--new",
+        "Test Score",
+        "-y",
+        "2016",
+        "-n",
+        "Josiah Wolf Oberholtzer",
+        "-e",
+        "josiah.oberholtzer@gmail.com",
+        "-g",
+        "josiah-wolf-oberholtzer",
+        "-l",
+        "consort",
+        "-w",
+        "www.josiahwolfoberholtzer.com",
     ]
     if force:
-        command.insert(0, '-f')
+        command.insert(0, "-f")
     with uqbar.io.DirectoryChange(test_directory_path):
-        if expect_error:
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
-        else:
-            try:
-                script(command)
-            except SystemExit:
-                raise RuntimeError('SystemExit')
+        run_script(script, command, expect_error=expect_error)
 
 
 @pytest.helpers.register
 def create_segment(
-    test_directory_path,
-    segment_name='test_segment',
-    force=False,
-    expect_error=False,
+    test_directory_path, segment_name="test_segment", force=False, expect_error=False
 ):
     script = abjadext.cli.ManageSegmentScript()
-    command = ['--new', segment_name]
+    command = ["--new", segment_name]
     if force:
-        command.insert(0, '-f')
+        command.insert(0, "-f")
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
-        if expect_error:
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
-        else:
-            try:
-                script(command)
-            except SystemExit:
-                raise RuntimeError('SystemExit')
-    return score_path / package_name / 'segments' / segment_name
+        run_script(script, command, expect_error=expect_error)
+    return score_path / package_name / "segments" / segment_name
 
 
 @pytest.helpers.register
 def get_fancy_parts_code():
-    return uqbar.strings.normalize(r"""
+    return uqbar.strings.normalize(
+        r"""
         \book {
             \bookOutputSuffix "cello"
             \score {
@@ -261,12 +219,14 @@ def get_fancy_parts_code():
                 \include "../segments.ily"
             }
         }
-        """)
+        """
+    )
 
 
 @pytest.helpers.register
 def get_fancy_segment_maker_code():
-    return uqbar.strings.normalize(r"""
+    return uqbar.strings.normalize(
+        r"""
         import abjad
 
         class SegmentMaker(abjad.SegmentMaker):
@@ -316,50 +276,59 @@ def get_fancy_segment_maker_code():
                         )
                 metadata['measure_count'] = self.measure_count
                 return lilypond_file
-        """)
+        """
+    )
 
 
 @pytest.helpers.register
 def illustrate_material(test_directory_path, material_name):
     script = abjadext.cli.ManageMaterialScript()
-    command = ['--illustrate', material_name]
+    command = ["--illustrate", material_name]
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
-        try:
-            script(command)
-        except SystemExit as e:
-            raise RuntimeError('SystemExit: {}'.format(e.code))
+        run_script(script, command)
 
 
 @pytest.helpers.register
 def illustrate_segment(test_directory_path, segment_name):
     script = abjadext.cli.ManageSegmentScript()
-    command = ['--illustrate', segment_name]
+    command = ["--illustrate", segment_name]
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
-        try:
-            script(command)
-        except SystemExit as e:
-            raise RuntimeError('SystemExit: {}'.format(e.code))
+        run_script(script, command)
 
 
 @pytest.helpers.register
 def illustrate_segments(test_directory_path):
     script = abjadext.cli.ManageSegmentScript()
-    command = ['--illustrate', '*']
+    command = ["--illustrate", "*"]
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
-        script(command)
+        run_script(script, command)
 
 
 @pytest.helpers.register
 def install_fancy_segment_maker(test_directory_path):
     score_path = test_directory_path / package_name / package_name
-    tools_path = score_path / 'tools'
-    segment_maker_path = tools_path / 'SegmentMaker.py'
-    with segment_maker_path.open('w') as file_pointer:
+    tools_path = score_path / "tools"
+    segment_maker_path = tools_path / "SegmentMaker.py"
+    with segment_maker_path.open("w") as file_pointer:
         file_pointer.write(pytest.helpers.get_fancy_segment_maker_code())
-    build_path = score_path / 'builds'
-    parts_path = build_path / 'parts.ily'
-    with parts_path.open('w') as file_pointer:
+    build_path = score_path / "builds"
+    parts_path = build_path / "parts.ily"
+    with parts_path.open("w") as file_pointer:
         file_pointer.write(pytest.helpers.get_fancy_parts_code())
+
+
+@pytest.helpers.register
+def run_script(script, command, expect_error=False):
+    if expect_error:
+        with pytest.raises(SystemExit) as exception_info:
+            script(command)
+        assert exception_info.value.code == expect_error
+    else:
+        try:
+            script(command)
+        except SystemExit as exception:
+            if exception.code:
+                raise RuntimeError("SystemExit: {}".format(exception.code))

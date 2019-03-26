@@ -1,9 +1,10 @@
-import abjadext.cli
 import os
 import platform
+from io import StringIO
+
+import abjadext.cli
 import pytest
 import uqbar.io
-from io import StringIO
 from uqbar.strings import normalize
 
 
@@ -13,38 +14,46 @@ def test_lilypond_error(paths):
     """
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    material_path = pytest.helpers.create_material(paths.test_directory_path, 'test_material')
-    definition_path = material_path.joinpath('definition.py')
-    with open(str(definition_path), 'w') as file_pointer:
-        file_pointer.write(normalize(r'''
+    material_path = pytest.helpers.create_material(
+        paths.test_directory_path, "test_material"
+    )
+    definition_path = material_path.joinpath("definition.py")
+    with open(str(definition_path), "w") as file_pointer:
+        file_pointer.write(
+            normalize(
+                r"""
         import abjad
 
 
         test_material = abjad.lilypondfile.LilyPondFile.new()
         test_material.items.append(r'\this-does-not-exist')
-        '''))
+        """
+            )
+        )
     script = abjadext.cli.ManageMaterialScript()
-    command = ['--illustrate', 'test_material']
+    command = ["--illustrate", "test_material"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
+            pytest.helpers.run_script(script, command, expect_error=True)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Illustration candidates: 'test_material' ...
         Illustrating test_score/materials/test_material/
             Importing test_score.materials.test_material.definition
                 Abjad runtime: ... second...
             Writing test_score/materials/test_material/illustration.ly ... OK!
             Writing test_score/materials/test_material/illustration.pdf ... Failed!
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
-    illustration_ly_path = material_path.joinpath('illustration.ly')
+    illustration_ly_path = material_path.joinpath("illustration.ly")
     assert illustration_ly_path.exists()
     pytest.helpers.compare_lilypond_contents(
-        illustration_ly_path, normalize(r'''
+        illustration_ly_path,
+        normalize(
+            r"""
         \language "english" %! LilyPondFile
 
         \header { %! LilyPondFile
@@ -56,7 +65,9 @@ def test_lilypond_error(paths):
         \paper {}
 
         \this-does-not-exist
-        '''))
+        """
+        ),
+    )
 
 
 def test_missing_definition(paths):
@@ -65,23 +76,25 @@ def test_missing_definition(paths):
     """
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    material_path = pytest.helpers.create_material(paths.test_directory_path, 'test_material')
-    definition_path = material_path.joinpath('definition.py')
+    material_path = pytest.helpers.create_material(
+        paths.test_directory_path, "test_material"
+    )
+    definition_path = material_path.joinpath("definition.py")
     definition_path.unlink()
     script = abjadext.cli.ManageMaterialScript()
-    command = ['--illustrate', 'test_material']
+    command = ["--illustrate", "test_material"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
+            pytest.helpers.run_script(script, command, expect_error=True)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
             Illustration candidates: 'test_material' ...
             Illustrating test_score/materials/test_material/
                 Importing test_score.materials.test_material.definition
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
 
 
@@ -91,27 +104,33 @@ def test_python_cannot_illustrate(paths):
     """
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    material_path = pytest.helpers.create_material(paths.test_directory_path, 'test_material')
-    definition_path = material_path.joinpath('definition.py')
-    with open(str(definition_path), 'w') as file_pointer:
-        file_pointer.write(normalize(r'''
+    material_path = pytest.helpers.create_material(
+        paths.test_directory_path, "test_material"
+    )
+    definition_path = material_path.joinpath("definition.py")
+    with open(str(definition_path), "w") as file_pointer:
+        file_pointer.write(
+            normalize(
+                r"""
         test_material = None
-        '''))
+        """
+            )
+        )
     script = abjadext.cli.ManageMaterialScript()
-    command = ['--illustrate', 'test_material']
+    command = ["--illustrate", "test_material"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
+            pytest.helpers.run_script(script, command, expect_error=True)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Illustration candidates: 'test_material' ...
         Illustrating test_score/materials/test_material/
             Importing test_score.materials.test_material.definition
             Cannot illustrate material of type NoneType.
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
 
 
@@ -121,30 +140,36 @@ def test_python_error_on_illustrate(paths):
     """
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    material_path = pytest.helpers.create_material(paths.test_directory_path, 'test_material')
-    definition_path = material_path.joinpath('definition.py')
-    with open(str(definition_path), 'w') as file_pointer:
-        file_pointer.write(normalize(r'''
+    material_path = pytest.helpers.create_material(
+        paths.test_directory_path, "test_material"
+    )
+    definition_path = material_path.joinpath("definition.py")
+    with open(str(definition_path), "w") as file_pointer:
+        file_pointer.write(
+            normalize(
+                r"""
         class Foo:
             def __illustrate__(paths):
                 raise TypeError('This is fake.')
 
         test_material = Foo()
-        '''))
+        """
+            )
+        )
     script = abjadext.cli.ManageMaterialScript()
-    command = ['--illustrate', 'test_material']
+    command = ["--illustrate", "test_material"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
+            pytest.helpers.run_script(script, command, expect_error=True)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Illustration candidates: 'test_material' ...
         Illustrating test_score/materials/test_material/
             Importing test_score.materials.test_material.definition
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
 
 
@@ -154,47 +179,43 @@ def test_python_error_on_import(paths):
     """
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    material_path = pytest.helpers.create_material(paths.test_directory_path, 'test_material')
-    definition_path = material_path.joinpath('definition.py')
-    with open(str(definition_path), 'a') as file_pointer:
-        file_pointer.write('\n\nfailure = 1 / 0\n')
+    material_path = pytest.helpers.create_material(
+        paths.test_directory_path, "test_material"
+    )
+    definition_path = material_path.joinpath("definition.py")
+    with open(str(definition_path), "a") as file_pointer:
+        file_pointer.write("\n\nfailure = 1 / 0\n")
     script = abjadext.cli.ManageMaterialScript()
-    command = ['--illustrate', 'test_material']
+    command = ["--illustrate", "test_material"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
+            pytest.helpers.run_script(script, command, expect_error=True)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Illustration candidates: 'test_material' ...
         Illustrating test_score/materials/test_material/
             Importing test_score.materials.test_material.definition
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
 
 
 def test_success_all_materials(paths, open_file_mock):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    pytest.helpers.create_material(
-        paths.test_directory_path, 'material_one')
-    pytest.helpers.create_material(
-        paths.test_directory_path, 'material_two')
-    pytest.helpers.create_material(
-        paths.test_directory_path, 'material_three')
+    pytest.helpers.create_material(paths.test_directory_path, "material_one")
+    pytest.helpers.create_material(paths.test_directory_path, "material_two")
+    pytest.helpers.create_material(paths.test_directory_path, "material_three")
     script = abjadext.cli.ManageMaterialScript()
-    command = ['--illustrate', '*']
+    command = ["--illustrate", "*"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as e:
-                raise RuntimeError('SystemExit: {}'.format(e.code))
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Illustration candidates: '*' ...
         Illustrating test_score/materials/material_one/
             Importing test_score.materials.material_one.definition
@@ -217,36 +238,29 @@ def test_success_all_materials(paths, open_file_mock):
             Writing test_score/materials/material_two/illustration.pdf ... OK!
                 LilyPond runtime: ... second...
             Illustrated test_score/materials/material_two/
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
-    assert (
-        paths.materials_path / 'material_one' / 'illustration.pdf'
-    ).exists()
-    assert (
-        paths.materials_path / 'material_two' / 'illustration.pdf'
-    ).exists()
-    assert (
-        paths.materials_path / 'material_three' / 'illustration.pdf'
-    ).exists()
+    assert (paths.materials_path / "material_one" / "illustration.pdf").exists()
+    assert (paths.materials_path / "material_two" / "illustration.pdf").exists()
+    assert (paths.materials_path / "material_three" / "illustration.pdf").exists()
 
 
 def test_success_filtered_materials(paths, open_file_mock):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    pytest.helpers.create_material(paths.test_directory_path, 'material_one')
-    pytest.helpers.create_material(paths.test_directory_path, 'material_two')
-    pytest.helpers.create_material(paths.test_directory_path, 'material_three')
+    pytest.helpers.create_material(paths.test_directory_path, "material_one")
+    pytest.helpers.create_material(paths.test_directory_path, "material_two")
+    pytest.helpers.create_material(paths.test_directory_path, "material_three")
     script = abjadext.cli.ManageMaterialScript()
-    command = ['--illustrate', 'material_t*']
+    command = ["--illustrate", "material_t*"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as e:
-                raise RuntimeError('SystemExit: {}'.format(e.code))
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Illustration candidates: 'material_t*' ...
         Illustrating test_score/materials/material_three/
             Importing test_score.materials.material_three.definition
@@ -262,47 +276,37 @@ def test_success_filtered_materials(paths, open_file_mock):
             Writing test_score/materials/material_two/illustration.pdf ... OK!
                 LilyPond runtime: ... second...
             Illustrated test_score/materials/material_two/
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
-    assert not (
-        paths.materials_path / 'material_one' / 'illustration.pdf'
-    ).exists()
-    assert (
-        paths.materials_path / 'material_two' / 'illustration.pdf'
-    ).exists()
-    assert (
-        paths.materials_path / 'material_three' / 'illustration.pdf'
-    ).exists()
+    assert not (paths.materials_path / "material_one" / "illustration.pdf").exists()
+    assert (paths.materials_path / "material_two" / "illustration.pdf").exists()
+    assert (paths.materials_path / "material_three" / "illustration.pdf").exists()
 
 
 def test_success_one_material(paths, open_file_mock):
     expected_files = [
-        'test_score/test_score/materials/.gitignore',
-        'test_score/test_score/materials/__init__.py',
-        'test_score/test_score/materials/test_material/__init__.py',
-        'test_score/test_score/materials/test_material/definition.py',
-        'test_score/test_score/materials/test_material/illustration.ly',
-        'test_score/test_score/materials/test_material/illustration.pdf',
+        "test_score/test_score/materials/.gitignore",
+        "test_score/test_score/materials/__init__.py",
+        "test_score/test_score/materials/test_material/__init__.py",
+        "test_score/test_score/materials/test_material/definition.py",
+        "test_score/test_score/materials/test_material/illustration.ly",
+        "test_score/test_score/materials/test_material/illustration.pdf",
     ]
-    if platform.system().lower() == 'windows':
-        expected_files = [
-            _.replace('/', os.path.sep)
-            for _ in expected_files
-        ]
+    if platform.system().lower() == "windows":
+        expected_files = [_.replace("/", os.path.sep) for _ in expected_files]
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    pytest.helpers.create_material(paths.test_directory_path, 'test_material')
+    pytest.helpers.create_material(paths.test_directory_path, "test_material")
     script = abjadext.cli.ManageMaterialScript()
-    command = ['--illustrate', 'test_material']
+    command = ["--illustrate", "test_material"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as e:
-                raise RuntimeError('SystemExit: {}'.format(e.code))
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Illustration candidates: 'test_material' ...
         Illustrating test_score/materials/test_material/
             Importing test_score.materials.test_material.definition
@@ -311,19 +315,20 @@ def test_success_one_material(paths, open_file_mock):
             Writing test_score/materials/test_material/illustration.pdf ... OK!
                 LilyPond runtime: ... second...
             Illustrated test_score/materials/test_material/
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
     pytest.helpers.compare_path_contents(
-        paths.materials_path,
-        expected_files,
-        paths.test_directory_path,
+        paths.materials_path, expected_files, paths.test_directory_path
     )
     illustration_path = paths.materials_path.joinpath(
-        'test_material', 'illustration.ly')
+        "test_material", "illustration.ly"
+    )
     pytest.helpers.compare_lilypond_contents(
         illustration_path,
         normalize(
-            r'''
+            r"""
             \language "english" %! LilyPondFile
 
             \header { %! LilyPondFile
@@ -335,6 +340,6 @@ def test_success_one_material(paths, open_file_mock):
             \paper {}
 
             \markup { "An example illustrable material." }
-            '''
+            """
         ),
     )

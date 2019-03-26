@@ -1,9 +1,10 @@
-import abjadext.cli
 import os
 import platform
+from io import StringIO
+
+import abjadext.cli
 import pytest
 import uqbar.io
-from io import StringIO
 from uqbar.strings import normalize
 
 
@@ -14,10 +15,13 @@ def test_lilypond_error(paths):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
     segment_path = pytest.helpers.create_segment(
-        paths.test_directory_path, 'test_segment')
-    definition_path = segment_path.joinpath('definition.py')
-    with open(str(definition_path), 'w') as file_pointer:
-        file_pointer.write(normalize(r'''
+        paths.test_directory_path, "test_segment"
+    )
+    definition_path = segment_path.joinpath("definition.py")
+    with open(str(definition_path), "w") as file_pointer:
+        file_pointer.write(
+            normalize(
+                r"""
         import abjad
 
 
@@ -36,17 +40,17 @@ def test_lilypond_error(paths):
                 return lilypond_file
 
         segment_maker = FaultySegmentMaker()
-        '''))
+        """
+            )
+        )
     script = abjadext.cli.ManageSegmentScript()
-    command = ['--illustrate', 'test_segment']
+    command = ["--illustrate", "test_segment"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
+            pytest.helpers.run_script(script, command, expect_error=True)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Illustration candidates: 'test_segment' ...
             Reading test_score/segments/metadata.json ... OK!
         Illustrating test_score/segments/test_segment/
@@ -57,12 +61,16 @@ def test_lilypond_error(paths):
                 Abjad runtime: ... second...
             Writing test_score/segments/test_segment/illustration.ly ... OK!
             Writing test_score/segments/test_segment/illustration.pdf ... Failed!
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
-    illustration_ly_path = segment_path.joinpath('illustration.ly')
+    illustration_ly_path = segment_path.joinpath("illustration.ly")
     assert illustration_ly_path.exists()
     pytest.helpers.compare_lilypond_contents(
-        illustration_ly_path, normalize(r'''
+        illustration_ly_path,
+        normalize(
+            r"""
         \language "english" %! LilyPondFile
 
         \header { %! LilyPondFile
@@ -86,7 +94,9 @@ def test_lilypond_error(paths):
         } %! LilyPondFile
 
         \this-does-not-exist
-        '''))
+        """
+        ),
+    )
 
 
 def test_missing_definition(paths):
@@ -95,26 +105,28 @@ def test_missing_definition(paths):
     """
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    segment_path = pytest.helpers.create_segment(paths.test_directory_path, 'test_segment')
-    definition_path = segment_path.joinpath('definition.py')
+    segment_path = pytest.helpers.create_segment(
+        paths.test_directory_path, "test_segment"
+    )
+    definition_path = segment_path.joinpath("definition.py")
     definition_path.unlink()
     script = abjadext.cli.ManageSegmentScript()
-    command = ['--illustrate', 'test_segment']
+    command = ["--illustrate", "test_segment"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
+            pytest.helpers.run_script(script, command, expect_error=True)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Illustration candidates: 'test_segment' ...
             Reading test_score/segments/metadata.json ... OK!
         Illustrating test_score/segments/test_segment/
             Reading test_score/segments/metadata.json ... OK!
             Reading test_score/segments/test_segment/metadata.json ... JSON does not exist.
             Importing test_score.segments.test_segment.definition
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
 
 
@@ -124,10 +136,14 @@ def test_python_error_on_illustrate(paths):
     """
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    segment_path = pytest.helpers.create_segment(paths.test_directory_path, 'test_segment')
-    definition_path = segment_path.joinpath('definition.py')
-    with open(str(definition_path), 'w') as file_pointer:
-        file_pointer.write(normalize(r'''
+    segment_path = pytest.helpers.create_segment(
+        paths.test_directory_path, "test_segment"
+    )
+    definition_path = segment_path.joinpath("definition.py")
+    with open(str(definition_path), "w") as file_pointer:
+        file_pointer.write(
+            normalize(
+                r"""
         import abjad
 
 
@@ -141,24 +157,26 @@ def test_python_error_on_illustrate(paths):
                 raise TypeError('This is intentionally broken.')
 
         segment_maker = FaultySegmentMaker()
-        '''))
+        """
+            )
+        )
     script = abjadext.cli.ManageSegmentScript()
-    command = ['--illustrate', 'test_segment']
+    command = ["--illustrate", "test_segment"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
+            pytest.helpers.run_script(script, command, expect_error=True)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Illustration candidates: 'test_segment' ...
             Reading test_score/segments/metadata.json ... OK!
         Illustrating test_score/segments/test_segment/
             Reading test_score/segments/metadata.json ... OK!
             Reading test_score/segments/test_segment/metadata.json ... JSON does not exist.
             Importing test_score.segments.test_segment.definition
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
 
 
@@ -168,47 +186,46 @@ def test_python_error_on_import(paths):
     """
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    segment_path = pytest.helpers.create_segment(paths.test_directory_path, 'test_segment')
-    definition_path = segment_path.joinpath('definition.py')
-    with open(str(definition_path), 'a') as file_pointer:
-        file_pointer.write('\n\nfailure = 1 / 0\n')
+    segment_path = pytest.helpers.create_segment(
+        paths.test_directory_path, "test_segment"
+    )
+    definition_path = segment_path.joinpath("definition.py")
+    with open(str(definition_path), "a") as file_pointer:
+        file_pointer.write("\n\nfailure = 1 / 0\n")
     script = abjadext.cli.ManageSegmentScript()
-    command = ['--illustrate', 'test_segment']
+    command = ["--illustrate", "test_segment"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
+            pytest.helpers.run_script(script, command, expect_error=True)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Illustration candidates: 'test_segment' ...
             Reading test_score/segments/metadata.json ... OK!
         Illustrating test_score/segments/test_segment/
             Reading test_score/segments/metadata.json ... OK!
             Reading test_score/segments/test_segment/metadata.json ... JSON does not exist.
             Importing test_score.segments.test_segment.definition
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
 
 
 def test_success_all_segments(paths, open_file_mock):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    pytest.helpers.create_segment(paths.test_directory_path, 'segment_one')
-    pytest.helpers.create_segment(paths.test_directory_path, 'segment_two')
-    pytest.helpers.create_segment(paths.test_directory_path, 'segment_three')
+    pytest.helpers.create_segment(paths.test_directory_path, "segment_one")
+    pytest.helpers.create_segment(paths.test_directory_path, "segment_two")
+    pytest.helpers.create_segment(paths.test_directory_path, "segment_three")
     script = abjadext.cli.ManageSegmentScript()
-    command = ['--illustrate', '*']
+    command = ["--illustrate", "*"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as e:
-                raise RuntimeError('SystemExit: {}'.format(e.code))
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Illustration candidates: '*' ...
             Reading test_score/segments/metadata.json ... OK!
         Illustrating test_score/segments/segment_one/
@@ -243,39 +260,29 @@ def test_success_all_segments(paths, open_file_mock):
             Writing test_score/segments/segment_three/illustration.pdf ... OK!
                 LilyPond runtime: ... second...
             Illustrated test_score/segments/segment_three/
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
-    assert paths.segments_path.joinpath(
-        'segment_one',
-        'illustration.pdf',
-    ).exists()
-    assert paths.segments_path.joinpath(
-        'segment_two',
-        'illustration.pdf',
-    ).exists()
-    assert paths.segments_path.joinpath(
-        'segment_three',
-        'illustration.pdf',
-    ).exists()
+    assert paths.segments_path.joinpath("segment_one", "illustration.pdf").exists()
+    assert paths.segments_path.joinpath("segment_two", "illustration.pdf").exists()
+    assert paths.segments_path.joinpath("segment_three", "illustration.pdf").exists()
 
 
 def test_success_filtered_segments(paths, open_file_mock):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    pytest.helpers.create_segment(paths.test_directory_path, 'segment_one')
-    pytest.helpers.create_segment(paths.test_directory_path, 'segment_two')
-    pytest.helpers.create_segment(paths.test_directory_path, 'segment_three')
+    pytest.helpers.create_segment(paths.test_directory_path, "segment_one")
+    pytest.helpers.create_segment(paths.test_directory_path, "segment_two")
+    pytest.helpers.create_segment(paths.test_directory_path, "segment_three")
     script = abjadext.cli.ManageSegmentScript()
-    command = ['--illustrate', 'segment_t*']
+    command = ["--illustrate", "segment_t*"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as e:
-                raise RuntimeError('SystemExit: {}'.format(e.code))
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Illustration candidates: 'segment_t*' ...
             Reading test_score/segments/metadata.json ... OK!
         Illustrating test_score/segments/segment_two/
@@ -300,37 +307,27 @@ def test_success_filtered_segments(paths, open_file_mock):
             Writing test_score/segments/segment_three/illustration.pdf ... OK!
                 LilyPond runtime: ... second...
             Illustrated test_score/segments/segment_three/
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
-    assert not paths.segments_path.joinpath(
-        'segment_one',
-        'illustration.pdf',
-    ).exists()
-    assert paths.segments_path.joinpath(
-        'segment_two',
-        'illustration.pdf',
-    ).exists()
-    assert paths.segments_path.joinpath(
-        'segment_three',
-        'illustration.pdf',
-    ).exists()
+    assert not paths.segments_path.joinpath("segment_one", "illustration.pdf").exists()
+    assert paths.segments_path.joinpath("segment_two", "illustration.pdf").exists()
+    assert paths.segments_path.joinpath("segment_three", "illustration.pdf").exists()
 
 
 def test_success_one_segment(paths, open_file_mock):
     string_io = StringIO()
     pytest.helpers.create_score(paths.test_directory_path)
-    pytest.helpers.create_segment(paths.test_directory_path, 'test_segment')
+    pytest.helpers.create_segment(paths.test_directory_path, "test_segment")
     script = abjadext.cli.ManageSegmentScript()
-    command = ['--illustrate', 'test_segment']
+    command = ["--illustrate", "test_segment"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as e:
-                raise RuntimeError('SystemExit: {}'.format(e.code))
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
-        expected=r'''
+        expected=r"""
         Illustration candidates: 'test_segment' ...
             Reading test_score/segments/metadata.json ... OK!
         Illustrating test_score/segments/test_segment/
@@ -343,34 +340,30 @@ def test_success_one_segment(paths, open_file_mock):
             Writing test_score/segments/test_segment/illustration.pdf ... OK!
                 LilyPond runtime: ... second...
             Illustrated test_score/segments/test_segment/
-        '''.replace('/', os.path.sep),
+        """.replace(
+            "/", os.path.sep
+        ),
     )
     expected_files = [
-        'test_score/test_score/segments/.gitignore',
-        'test_score/test_score/segments/__init__.py',
-        'test_score/test_score/segments/metadata.json',
-        'test_score/test_score/segments/test_segment/__init__.py',
-        'test_score/test_score/segments/test_segment/definition.py',
-        'test_score/test_score/segments/test_segment/illustration.ly',
-        'test_score/test_score/segments/test_segment/illustration.pdf',
-        'test_score/test_score/segments/test_segment/metadata.json',
+        "test_score/test_score/segments/.gitignore",
+        "test_score/test_score/segments/__init__.py",
+        "test_score/test_score/segments/metadata.json",
+        "test_score/test_score/segments/test_segment/__init__.py",
+        "test_score/test_score/segments/test_segment/definition.py",
+        "test_score/test_score/segments/test_segment/illustration.ly",
+        "test_score/test_score/segments/test_segment/illustration.pdf",
+        "test_score/test_score/segments/test_segment/metadata.json",
     ]
-    if platform.system().lower() == 'windows':
-        expected_files = [
-            _.replace('/', os.path.sep)
-            for _ in expected_files
-        ]
+    if platform.system().lower() == "windows":
+        expected_files = [_.replace("/", os.path.sep) for _ in expected_files]
     pytest.helpers.compare_path_contents(
-        paths.segments_path,
-        expected_files,
-        paths.test_directory_path,
+        paths.segments_path, expected_files, paths.test_directory_path
     )
-    illustration_path = paths.segments_path.joinpath(
-        'test_segment', 'illustration.ly')
+    illustration_path = paths.segments_path.joinpath("test_segment", "illustration.ly")
     pytest.helpers.compare_lilypond_contents(
         illustration_path,
         normalize(
-            r'''
+            r"""
             \language "english" %! LilyPondFile
 
             \include "../../stylesheets/stylesheet.ily" %! LilyPondFile
@@ -400,5 +393,6 @@ def test_success_one_segment(paths, open_file_mock):
                     }
                 >>
             } %! LilyPondFile
-        '''),
+        """
+        ),
     )
