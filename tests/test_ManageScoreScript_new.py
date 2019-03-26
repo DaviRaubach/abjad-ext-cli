@@ -5,7 +5,6 @@ import shutil
 from io import StringIO
 
 import pytest
-
 import uqbar.io
 
 

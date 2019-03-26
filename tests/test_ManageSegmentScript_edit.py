@@ -1,11 +1,11 @@
 import os
 from io import StringIO
 
-import abjad
-import pytest
-
 import abjadext.cli
+import pytest
 import uqbar.io
+
+import abjad
 
 
 def test_success(paths, call_subprocess_mock):
@@ -19,10 +19,7 @@ def test_success(paths, call_subprocess_mock):
     command = ["--edit", "test_segment"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as e:
-                raise RuntimeError("SystemExit: {}".format(e.code))
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""

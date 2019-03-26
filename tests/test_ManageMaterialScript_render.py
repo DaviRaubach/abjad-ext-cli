@@ -2,9 +2,8 @@ import os
 import platform
 from io import StringIO
 
-import pytest
-
 import abjadext.cli
+import pytest
 import uqbar.io
 
 
@@ -22,10 +21,7 @@ def test_success_one_material(paths, open_file_mock):
     command = ["--render", "test_material"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as e:
-                raise RuntimeError("SystemExit: {}".format(e.code))
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""

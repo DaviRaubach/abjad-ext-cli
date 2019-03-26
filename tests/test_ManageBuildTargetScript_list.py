@@ -1,8 +1,7 @@
 from io import StringIO
 
-import pytest
-
 import abjadext.cli
+import pytest
 import uqbar.io
 
 
@@ -12,33 +11,17 @@ def test_list(paths):
     script = abjadext.cli.ManageBuildTargetScript()
     command = ["--new", "big-version"]
     with uqbar.io.DirectoryChange(paths.score_path):
-        try:
-            script(command)
-        except SystemExit as exception:
-            if exception.code:
-                raise RuntimeError("SystemExit")
+        pytest.helpers.run_script(script, command)
     command = ["--new", "medium-version"]
     with uqbar.io.DirectoryChange(paths.score_path):
-        try:
-            script(command)
-        except SystemExit as exception:
-            if exception.code:
-                raise RuntimeError("SystemExit")
+        pytest.helpers.run_script(script, command)
     command = ["--new", "small-version"]
     with uqbar.io.DirectoryChange(paths.score_path):
-        try:
-            script(command)
-        except SystemExit as exception:
-            if exception.code:
-                raise RuntimeError("SystemExit")
+        pytest.helpers.run_script(script, command)
     command = ["--list"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as exception:
-                if exception.code:
-                    raise RuntimeError("SystemExit")
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""

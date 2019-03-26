@@ -2,9 +2,8 @@ import os
 import platform
 from io import StringIO
 
-import pytest
-
 import abjadext.cli
+import pytest
 import uqbar.io
 
 
@@ -14,15 +13,9 @@ def test_exists(paths):
     script = abjadext.cli.ManageBuildTargetScript()
     command = ["--new"]
     with uqbar.io.DirectoryChange(paths.score_path):
-        try:
-            script(command)
-        except SystemExit as exception:
-            if exception.code:
-                raise RuntimeError("SystemExit")
+        pytest.helpers.run_script(script, command)
         with uqbar.io.RedirectedStreams(stdout=string_io):
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
+            pytest.helpers.run_script(script, command, expect_error=True)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
@@ -41,11 +34,7 @@ def test_explicit(paths):
     command = ["--new", "--paper-size", "a3", "--orientation", "landscape"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as exception:
-                if exception.code:
-                    raise RuntimeError("SystemExit")
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
@@ -81,17 +70,9 @@ def test_force_replace(paths):
     script = abjadext.cli.ManageBuildTargetScript()
     command = ["-f", "--new"]
     with uqbar.io.DirectoryChange(paths.score_path):
-        try:
-            script(command)
-        except SystemExit as exception:
-            if exception.code:
-                raise RuntimeError("SystemExit")
+        pytest.helpers.run_script(script, command)
         with uqbar.io.RedirectedStreams(stdout=string_io):
-            try:
-                script(command)
-            except SystemExit as exception:
-                if exception.code:
-                    raise RuntimeError("SystemExit")
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
@@ -129,11 +110,7 @@ def test_implicit(paths):
     command = ["--new"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as exception:
-                if exception.code:
-                    raise RuntimeError("SystemExit")
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
@@ -336,11 +313,7 @@ def test_internal_path(paths):
     assert internal_path.exists()
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(str(internal_path)):
-            try:
-                script(command)
-            except SystemExit as exception:
-                if exception.code:
-                    raise RuntimeError("SystemExit")
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
@@ -367,11 +340,7 @@ def test_named(paths):
     ]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as exception:
-                if exception.code:
-                    raise RuntimeError("SystemExit")
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""

@@ -1,8 +1,7 @@
 from io import StringIO
 
-import pytest
-
 import abjadext.cli
+import pytest
 import uqbar.io
 
 
@@ -17,9 +16,7 @@ def test_list_materials(paths):
     command = ["--list"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 2
+            pytest.helpers.run_script(script, command, expect_error=2)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
@@ -40,9 +37,7 @@ def test_list_materials_no_materials(paths):
     command = ["--list"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 2
+            pytest.helpers.run_script(script, command, expect_error=2)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""

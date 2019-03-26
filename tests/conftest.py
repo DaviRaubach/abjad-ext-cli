@@ -6,9 +6,8 @@ import sys
 import types
 from unittest import mock
 
-import pytest
-
 import abjadext.cli
+import pytest
 import uqbar.io
 import uqbar.strings
 
@@ -78,11 +77,7 @@ def collect_segments(test_directory_path):
     command = ["--collect"]
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
-        try:
-            script(command)
-        except SystemExit as exception:
-            if exception.code:
-                raise RuntimeError("SystemExit: {}".format(exception.code))
+        run_script(script, command)
 
 
 @pytest.helpers.register
@@ -135,16 +130,7 @@ def create_build_target(test_directory_path, force=False, expect_error=False):
         command.insert(0, "-f")
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
-        if expect_error:
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.valuexception.code == 1
-        else:
-            try:
-                script(command)
-            except SystemExit as exception:
-                if exception.code:
-                    raise RuntimeError("SystemExit")
+        run_script(script, command, expect_error=expect_error)
     return score_path / package_name / "builds" / "letter-portrait"
 
 
@@ -158,16 +144,7 @@ def create_material(
         command.insert(0, "-f")
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
-        if expect_error:
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.valuexception.code == 1
-        else:
-            try:
-                script(command)
-            except SystemExit as exception:
-                if exception.code:
-                    raise RuntimeError("SystemExit")
+        run_script(script, command, expect_error=expect_error)
     return score_path / package_name / "materials" / material_name
 
 
@@ -193,16 +170,7 @@ def create_score(test_directory_path, force=False, expect_error=False):
     if force:
         command.insert(0, "-f")
     with uqbar.io.DirectoryChange(test_directory_path):
-        if expect_error:
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.valuexception.code == 1
-        else:
-            try:
-                script(command)
-            except SystemExit as exception:
-                if exception.code:
-                    raise RuntimeError("SystemExit")
+        run_script(script, command, expect_error=expect_error)
 
 
 @pytest.helpers.register
@@ -215,16 +183,7 @@ def create_segment(
         command.insert(0, "-f")
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
-        if expect_error:
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.valuexception.code == 1
-        else:
-            try:
-                script(command)
-            except SystemExit as exception:
-                if exception.code:
-                    raise RuntimeError("SystemExit")
+        run_script(script, command, expect_error=expect_error)
     return score_path / package_name / "segments" / segment_name
 
 
@@ -327,11 +286,7 @@ def illustrate_material(test_directory_path, material_name):
     command = ["--illustrate", material_name]
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
-        try:
-            script(command)
-        except SystemExit as exception:
-            if exception.code:
-                raise RuntimeError("SystemExit: {}".format(exception.code))
+        run_script(script, command)
 
 
 @pytest.helpers.register
@@ -340,11 +295,7 @@ def illustrate_segment(test_directory_path, segment_name):
     command = ["--illustrate", segment_name]
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
-        try:
-            script(command)
-        except SystemExit as exception:
-            if exception.code:
-                raise RuntimeError("SystemExit: {}".format(exception.code))
+        run_script(script, command)
 
 
 @pytest.helpers.register
@@ -353,11 +304,7 @@ def illustrate_segments(test_directory_path):
     command = ["--illustrate", "*"]
     score_path = test_directory_path / package_name
     with uqbar.io.DirectoryChange(score_path):
-        try:
-            script(command)
-        except SystemExit as exception:
-            if exception.code:
-                raise RuntimeError("SystemExit: {}".format(exception.code))
+        run_script(script, command)
 
 
 @pytest.helpers.register
@@ -371,3 +318,17 @@ def install_fancy_segment_maker(test_directory_path):
     parts_path = build_path / "parts.ily"
     with parts_path.open("w") as file_pointer:
         file_pointer.write(pytest.helpers.get_fancy_parts_code())
+
+
+@pytest.helpers.register
+def run_script(script, command, expect_error=False):
+    if expect_error:
+        with pytest.raises(SystemExit) as exception_info:
+            script(command)
+        assert exception_info.value.code == expect_error
+    else:
+        try:
+            script(command)
+        except SystemExit as exception:
+            if exception.code:
+                raise RuntimeError("SystemExit: {}".format(exception.code))

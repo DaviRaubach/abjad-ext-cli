@@ -2,9 +2,8 @@ import os
 import platform
 from io import StringIO
 
-import pytest
-
 import abjadext.cli
+import pytest
 import uqbar.io
 
 
@@ -18,10 +17,7 @@ def test_success(paths, open_file_mock):
     collect_script = abjadext.cli.ManageSegmentScript()
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                collect_script(["--collect"])
-            except SystemExit as e:
-                raise RuntimeError("SystemExit: {}".format(e.code))
+            pytest.helpers.run_script(collect_script, ["--collect"])
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""

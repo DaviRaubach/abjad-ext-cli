@@ -10,9 +10,9 @@ import subprocess
 import sys
 import traceback
 
-import abjad
-
 from uqbar.cli import CLI
+
+import abjad
 
 
 class ScorePackageScript(CLI):

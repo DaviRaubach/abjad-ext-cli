@@ -2,9 +2,8 @@ import os
 import platform
 from io import StringIO
 
-import pytest
-
 import abjadext.cli
+import pytest
 import uqbar.io
 from uqbar.strings import normalize
 
@@ -35,9 +34,7 @@ def test_lilypond_error(paths):
     command = ["--illustrate", "test_material"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
+            pytest.helpers.run_script(script, command, expect_error=True)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
@@ -88,9 +85,7 @@ def test_missing_definition(paths):
     command = ["--illustrate", "test_material"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
+            pytest.helpers.run_script(script, command, expect_error=True)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
@@ -125,9 +120,7 @@ def test_python_cannot_illustrate(paths):
     command = ["--illustrate", "test_material"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
+            pytest.helpers.run_script(script, command, expect_error=True)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
@@ -167,9 +160,7 @@ def test_python_error_on_illustrate(paths):
     command = ["--illustrate", "test_material"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
+            pytest.helpers.run_script(script, command, expect_error=True)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
@@ -198,9 +189,7 @@ def test_python_error_on_import(paths):
     command = ["--illustrate", "test_material"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            with pytest.raises(SystemExit) as exception_info:
-                script(command)
-            assert exception_info.value.code == 1
+            pytest.helpers.run_script(script, command, expect_error=True)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
@@ -223,10 +212,7 @@ def test_success_all_materials(paths, open_file_mock):
     command = ["--illustrate", "*"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as e:
-                raise RuntimeError("SystemExit: {}".format(e.code))
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
@@ -271,10 +257,7 @@ def test_success_filtered_materials(paths, open_file_mock):
     command = ["--illustrate", "material_t*"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as e:
-                raise RuntimeError("SystemExit: {}".format(e.code))
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
@@ -320,10 +303,7 @@ def test_success_one_material(paths, open_file_mock):
     command = ["--illustrate", "test_material"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as e:
-                raise RuntimeError("SystemExit: {}".format(e.code))
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""

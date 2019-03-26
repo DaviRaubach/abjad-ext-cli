@@ -2,9 +2,8 @@ import os
 import platform
 from io import StringIO
 
-import pytest
-
 import abjadext.cli
+import pytest
 import uqbar.io
 
 
@@ -57,11 +56,7 @@ def test_internal_path(paths):
     assert internal_path.exists()
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(str(internal_path)):
-            try:
-                script(command)
-            except SystemExit as exception:
-                if exception.code:
-                    raise RuntimeError("SystemExit")
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
@@ -89,11 +84,7 @@ def test_success(paths):
     command = ["--new", "test_segment"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as exception:
-                if exception.code:
-                    raise RuntimeError("SystemExit")
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""

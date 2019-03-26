@@ -1,12 +1,12 @@
 import os
 from io import StringIO
 
-import abjad
-import pytest
-
 import abjadext.cli
+import pytest
 import uqbar.io
 from uqbar.strings import normalize
+
+import abjad
 
 
 def side_effect(command, **keywords):
@@ -33,10 +33,7 @@ def test_success(paths, call_subprocess_mock):
     command = ["--stage"]
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as e:
-                raise RuntimeError("SystemExit: {}".format(e.code))
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
@@ -57,10 +54,7 @@ def test_success(paths, call_subprocess_mock):
     string_io = StringIO()
     with uqbar.io.RedirectedStreams(stdout=string_io):
         with uqbar.io.DirectoryChange(paths.score_path):
-            try:
-                script(command)
-            except SystemExit as e:
-                raise RuntimeError("SystemExit: {}".format(e.code))
+            pytest.helpers.run_script(script, command)
     pytest.helpers.compare_strings(
         actual=string_io.getvalue(),
         expected=r"""
