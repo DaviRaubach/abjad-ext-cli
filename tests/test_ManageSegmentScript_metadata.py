@@ -47,77 +47,77 @@ def test_2(paths, open_file_mock):
     pytest.helpers.compare_lilypond_contents(
         illustration_path,
         r"""
-        \language "english" %! LilyPondFile
+        \language "english" %! abjad.LilyPondFile
         <BLANKLINE>
-        \include "../../stylesheets/stylesheet.ily" %! LilyPondFile
+        \include "../../stylesheets/stylesheet.ily" %! abjad.LilyPondFile
         <BLANKLINE>
-        \header { %! LilyPondFile
+        \header { %! abjad.LilyPondFile
             tagline = ##f
-        } %! LilyPondFile
+        } %! abjad.LilyPondFile
         <BLANKLINE>
         \layout {}
         <BLANKLINE>
         \paper {}
         <BLANKLINE>
-        \score { %! LilyPondFile
-            \context Score = "String_Quartet_Score" %! StringQuartetScoreTemplate
-            <<                                      %! StringQuartetScoreTemplate
-                \context StaffGroup = "String_Quartet_Staff_Group" %! StringQuartetScoreTemplate
-                <<                                                 %! StringQuartetScoreTemplate
+        \score { %! abjad.LilyPondFile
+            \context Score = "String_Quartet_Score" %! abjad.StringQuartetScoreTemplate
+            <<                                      %! abjad.StringQuartetScoreTemplate
+                \context StaffGroup = "String_Quartet_Staff_Group" %! abjad.StringQuartetScoreTemplate
+                <<                                                 %! abjad.StringQuartetScoreTemplate
                     \tag #'first-violin
-                    \context Staff = "First_Violin_Staff" %! StringQuartetScoreTemplate
-                    {                                     %! StringQuartetScoreTemplate
-                        \context Voice = "First_Violin_Voice" %! StringQuartetScoreTemplate
-                        {                                     %! StringQuartetScoreTemplate
+                    \context Staff = "First_Violin_Staff" %! abjad.StringQuartetScoreTemplate
+                    {                                     %! abjad.StringQuartetScoreTemplate
+                        \context Voice = "First_Violin_Voice" %! abjad.StringQuartetScoreTemplate
+                        {                                     %! abjad.StringQuartetScoreTemplate
                             {
                                 \time 4/4
-                                \clef "treble" %! attach_defaults
+                                \clef "treble" %! abjad.ScoreTemplate.attach_defaults
                                 c'1
                                 \bar "|." %! SCORE_1
                             }
-                        } %! StringQuartetScoreTemplate
-                    } %! StringQuartetScoreTemplate
+                        } %! abjad.StringQuartetScoreTemplate
+                    } %! abjad.StringQuartetScoreTemplate
                     \tag #'second-violin
-                    \context Staff = "Second_Violin_Staff" %! StringQuartetScoreTemplate
-                    {                                      %! StringQuartetScoreTemplate
-                        \context Voice = "Second_Violin_Voice" %! StringQuartetScoreTemplate
-                        {                                      %! StringQuartetScoreTemplate
+                    \context Staff = "Second_Violin_Staff" %! abjad.StringQuartetScoreTemplate
+                    {                                      %! abjad.StringQuartetScoreTemplate
+                        \context Voice = "Second_Violin_Voice" %! abjad.StringQuartetScoreTemplate
+                        {                                      %! abjad.StringQuartetScoreTemplate
                             {
                                 \time 4/4
-                                \clef "treble" %! attach_defaults
+                                \clef "treble" %! abjad.ScoreTemplate.attach_defaults
                                 c'1
                                 \bar "|." %! SCORE_1
                             }
-                        } %! StringQuartetScoreTemplate
-                    } %! StringQuartetScoreTemplate
+                        } %! abjad.StringQuartetScoreTemplate
+                    } %! abjad.StringQuartetScoreTemplate
                     \tag #'viola
-                    \context Staff = "Viola_Staff" %! StringQuartetScoreTemplate
-                    {                              %! StringQuartetScoreTemplate
-                        \context Voice = "Viola_Voice" %! StringQuartetScoreTemplate
-                        {                              %! StringQuartetScoreTemplate
+                    \context Staff = "Viola_Staff" %! abjad.StringQuartetScoreTemplate
+                    {                              %! abjad.StringQuartetScoreTemplate
+                        \context Voice = "Viola_Voice" %! abjad.StringQuartetScoreTemplate
+                        {                              %! abjad.StringQuartetScoreTemplate
                             {
                                 \time 4/4
-                                \clef "alto" %! attach_defaults
+                                \clef "alto" %! abjad.ScoreTemplate.attach_defaults
                                 c'1
                                 \bar "|." %! SCORE_1
                             }
-                        } %! StringQuartetScoreTemplate
-                    } %! StringQuartetScoreTemplate
+                        } %! abjad.StringQuartetScoreTemplate
+                    } %! abjad.StringQuartetScoreTemplate
                     \tag #'cello
-                    \context Staff = "Cello_Staff" %! StringQuartetScoreTemplate
-                    {                              %! StringQuartetScoreTemplate
-                        \context Voice = "Cello_Voice" %! StringQuartetScoreTemplate
-                        {                              %! StringQuartetScoreTemplate
+                    \context Staff = "Cello_Staff" %! abjad.StringQuartetScoreTemplate
+                    {                              %! abjad.StringQuartetScoreTemplate
+                        \context Voice = "Cello_Voice" %! abjad.StringQuartetScoreTemplate
+                        {                              %! abjad.StringQuartetScoreTemplate
                             {
                                 \time 4/4
-                                \clef "bass" %! attach_defaults
+                                \clef "bass" %! abjad.ScoreTemplate.attach_defaults
                                 c'1
                                 \bar "|." %! SCORE_1
                             }
-                        } %! StringQuartetScoreTemplate
-                    } %! StringQuartetScoreTemplate
-                >> %! StringQuartetScoreTemplate
-            >> %! StringQuartetScoreTemplate
-        } %! LilyPondFile
+                        } %! abjad.StringQuartetScoreTemplate
+                    } %! abjad.StringQuartetScoreTemplate
+                >> %! abjad.StringQuartetScoreTemplate
+            >> %! abjad.StringQuartetScoreTemplate
+        } %! abjad.LilyPondFile
         """,
     )

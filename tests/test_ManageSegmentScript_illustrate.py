@@ -71,17 +71,17 @@ def test_lilypond_error(paths):
         illustration_ly_path,
         normalize(
             r"""
-        \language "english" %! LilyPondFile
+        \language "english" %! abjad.LilyPondFile
 
-        \header { %! LilyPondFile
+        \header { %! abjad.LilyPondFile
             tagline = ##f
-        } %! LilyPondFile
+        } %! abjad.LilyPondFile
 
         \layout {}
 
         \paper {}
 
-        \score { %! LilyPondFile
+        \score { %! abjad.LilyPondFile
             \new Staff
             {
                 c'4
@@ -91,7 +91,7 @@ def test_lilypond_error(paths):
                 f'4
                 )
             }
-        } %! LilyPondFile
+        } %! abjad.LilyPondFile
 
         \this-does-not-exist
         """
@@ -364,19 +364,19 @@ def test_success_one_segment(paths, open_file_mock):
         illustration_path,
         normalize(
             r"""
-            \language "english" %! LilyPondFile
+            \language "english" %! abjad.LilyPondFile
 
-            \include "../../stylesheets/stylesheet.ily" %! LilyPondFile
+            \include "../../stylesheets/stylesheet.ily" %! abjad.LilyPondFile
 
-            \header { %! LilyPondFile
+            \header { %! abjad.LilyPondFile
                 tagline = ##f
-            } %! LilyPondFile
+            } %! abjad.LilyPondFile
 
             \layout {}
 
             \paper {}
 
-            \score { %! LilyPondFile
+            \score { %! abjad.LilyPondFile
                 \context Score = "Example_Score"
                 <<
                     \context Staff = "Example_Staff"
@@ -392,7 +392,7 @@ def test_success_one_segment(paths, open_file_mock):
                         }
                     }
                 >>
-            } %! LilyPondFile
+            } %! abjad.LilyPondFile
         """
         ),
     )
