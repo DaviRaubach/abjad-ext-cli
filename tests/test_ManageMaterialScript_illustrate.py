@@ -54,11 +54,11 @@ def test_lilypond_error(paths):
         illustration_ly_path,
         normalize(
             r"""
-        \language "english" %! abjad.LilyPondFile
+        \language "english" %! abjad.LilyPondFile._get_format_pieces()
 
-        \header { %! abjad.LilyPondFile
+        \header { %! abjad.LilyPondFile._get_formatted_blocks()
             tagline = ##f
-        } %! abjad.LilyPondFile
+        } %! abjad.LilyPondFile._get_formatted_blocks()
 
         \layout {}
 
@@ -329,11 +329,11 @@ def test_success_one_material(paths, open_file_mock):
         illustration_path,
         normalize(
             r"""
-            \language "english" %! abjad.LilyPondFile
+            \language "english" %! abjad.LilyPondFile._get_format_pieces()
 
-            \header { %! abjad.LilyPondFile
+            \header { %! abjad.LilyPondFile._get_formatted_blocks()
                 tagline = ##f
-            } %! abjad.LilyPondFile
+            } %! abjad.LilyPondFile._get_formatted_blocks()
 
             \layout {}
 

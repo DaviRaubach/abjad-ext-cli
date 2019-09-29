@@ -320,11 +320,11 @@ class ManageSegmentScript(ScorePackageScript):
     def _process_illustration_contents(self, ly_path):
         with open(str(ly_path), "r") as file_pointer:
             contents = file_pointer.read().splitlines()
-        while contents and contents[0] != r"\score { %! abjad.LilyPondFile":
+        while contents and contents[0] != r"\score { %! abjad.LilyPondFile._get_formatted_blocks()":
             contents.pop(0)
         contents.pop(0)
         for i in range(len(contents)):
-            if contents[i] == "} %! abjad.LilyPondFile":
+            if contents[i] == "} %! abjad.LilyPondFile._get_formatted_blocks()":
                 contents = contents[:i]
                 break
         contents = "\n".join(contents)

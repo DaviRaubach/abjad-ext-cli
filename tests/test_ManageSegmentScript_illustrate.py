@@ -71,17 +71,17 @@ def test_lilypond_error(paths):
         illustration_ly_path,
         normalize(
             r"""
-        \language "english" %! abjad.LilyPondFile
+        \language "english" %! abjad.LilyPondFile._get_format_pieces()
 
-        \header { %! abjad.LilyPondFile
+        \header { %! abjad.LilyPondFile._get_formatted_blocks()
             tagline = ##f
-        } %! abjad.LilyPondFile
+        } %! abjad.LilyPondFile._get_formatted_blocks()
 
         \layout {}
 
         \paper {}
 
-        \score { %! abjad.LilyPondFile
+        \score { %! abjad.LilyPondFile._get_formatted_blocks()
             \new Staff
             {
                 c'4
@@ -91,7 +91,7 @@ def test_lilypond_error(paths):
                 f'4
                 )
             }
-        } %! abjad.LilyPondFile
+        } %! abjad.LilyPondFile._get_formatted_blocks()
 
         \this-does-not-exist
         """
@@ -364,19 +364,19 @@ def test_success_one_segment(paths, open_file_mock):
         illustration_path,
         normalize(
             r"""
-            \language "english" %! abjad.LilyPondFile
+            \language "english" %! abjad.LilyPondFile._get_format_pieces()
 
-            \include "../../stylesheets/stylesheet.ily" %! abjad.LilyPondFile
+            \include "../../stylesheets/stylesheet.ily" %! abjad.LilyPondFile._get_formatted_includes()
 
-            \header { %! abjad.LilyPondFile
+            \header { %! abjad.LilyPondFile._get_formatted_blocks()
                 tagline = ##f
-            } %! abjad.LilyPondFile
+            } %! abjad.LilyPondFile._get_formatted_blocks()
 
             \layout {}
 
             \paper {}
 
-            \score { %! abjad.LilyPondFile
+            \score { %! abjad.LilyPondFile._get_formatted_blocks()
                 \context Score = "Example_Score"
                 <<
                     \context Staff = "Example_Staff"
@@ -392,7 +392,7 @@ def test_success_one_segment(paths, open_file_mock):
                         }
                     }
                 >>
-            } %! abjad.LilyPondFile
+            } %! abjad.LilyPondFile._get_formatted_blocks()
         """
         ),
     )
