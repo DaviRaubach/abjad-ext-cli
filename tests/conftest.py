@@ -6,10 +6,11 @@ import sys
 import types
 from unittest import mock
 
-import abjadext.cli
 import pytest
 import uqbar.io
 import uqbar.strings
+
+import abjadext.cli
 
 pytest_plugins = ["helpers_namespace"]
 

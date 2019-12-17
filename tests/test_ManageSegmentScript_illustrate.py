@@ -2,10 +2,11 @@ import os
 import platform
 from io import StringIO
 
-import abjadext.cli
 import pytest
 import uqbar.io
 from uqbar.strings import normalize
+
+import abjadext.cli
 
 
 def test_lilypond_error(paths):

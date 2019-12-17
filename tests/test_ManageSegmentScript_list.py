@@ -1,9 +1,10 @@
 import os
 from io import StringIO
 
-import abjadext.cli
 import pytest
 import uqbar.io
+
+import abjadext.cli
 
 
 def test_list_segments(paths):

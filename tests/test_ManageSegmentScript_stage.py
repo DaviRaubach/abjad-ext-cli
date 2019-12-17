@@ -1,12 +1,12 @@
 import os
 from io import StringIO
 
-import abjadext.cli
 import pytest
 import uqbar.io
 from uqbar.strings import normalize
 
 import abjad
+import abjadext.cli
 
 
 def side_effect(command, **keywords):

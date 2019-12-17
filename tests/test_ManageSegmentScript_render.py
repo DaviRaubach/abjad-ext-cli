@@ -2,9 +2,10 @@ import os
 import platform
 from io import StringIO
 
-import abjadext.cli
 import pytest
 import uqbar.io
+
+import abjadext.cli
 
 
 def test_success_one_segment(paths, open_file_mock):

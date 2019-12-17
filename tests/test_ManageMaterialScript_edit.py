@@ -1,10 +1,10 @@
 from io import StringIO
 
-import abjadext.cli
 import pytest
 import uqbar.io
 
 import abjad
+import abjadext.cli
 
 
 def test_success(paths, call_subprocess_mock):

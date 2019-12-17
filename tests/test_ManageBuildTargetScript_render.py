@@ -1,9 +1,10 @@
 import os
 import platform
 
-import abjadext.cli
 import pytest
 import uqbar.io
+
+import abjadext.cli
 
 
 def test_success_all(paths, open_file_mock):
