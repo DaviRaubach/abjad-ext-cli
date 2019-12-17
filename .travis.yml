@@ -9,7 +9,7 @@ python:
 env:
   global:
   - LILYPOND_URL=http://lilypond.org/downloads/binaries/linux-64/
-  - LILYPOND_VERSION=2.19.65
+  - LILYPOND_VERSION=2.19.83
 
 addons:
   apt:
