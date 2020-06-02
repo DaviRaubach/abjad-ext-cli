@@ -1,16 +1,16 @@
 .PHONY: docs build
 
 project = abjadext
-errors = E123,E203,E265,E266,E501,W503
+errors = E203,E266,E501,W503
 origin := $(shell git config --get remote.origin.url)
 formatPaths = ${project}/ tests/ *.py
 testPaths = ${project}/ tests/
 
 black-check:
-	black --target-version py36 --exclude '.*boilerplate.*' --check --diff ${formatPaths}
+	black --check --diff --target-version py38 ${formatPaths}
 
 black-reformat:
-	black --target-version py36 --exclude '.*boilerplate.*' ${formatPaths}
+	black --target-version py38 ${formatPaths}
 
 build:
 	python setup.py sdist
@@ -29,8 +29,8 @@ clean:
 docs:
 	make -C docs/ html
 
-flake8:
-	flake8 --max-line-length=90 --isolated --ignore=${errors} ${formatPaths}
+flake8-check:
+	flake8 --ignore=${errors} --isolated --max-line-length=88 ${formatPaths}
 
 gh-pages:
 	rm -Rf gh-pages/
@@ -45,20 +45,38 @@ gh-pages:
 		git push -u origin gh-pages
 	rm -Rf gh-pages/
 
-isort:
+isort-check:
 	isort \
+		--apply \
 		--case-sensitive \
-		--multi-line 3 \
+		--check-only \
+		--diff \
+		--force-grid-wrap=0 \
+		--line-width=88 \
+		--multi-line=3 \
+		--project=abjad \
 		--recursive \
-		--skip ${project}/__init__.py \
-		--skip-glob '*boilerplate*' \
-		--thirdparty uqbar \
+		--thirdparty=uqbar \
 		--trailing-comma \
-		--use-parentheses -y \
+		--use-parentheses \
+		${formatPaths}
+
+isort-reformat:
+	isort \
+		--apply \
+		--case-sensitive \
+		--force-grid-wrap=0 \
+		--line-width=88 \
+		--multi-line=3 \
+		--project=abjad \
+		--recursive \
+		--thirdparty=uqbar \
+		--trailing-comma \
+		--use-parentheses \
 		${formatPaths}
 
 mypy:
-	mypy --ignore-missing-imports ${project}/
+	mypy ${project}/
 
 pytest:
 	rm -Rf htmlcov/
@@ -90,8 +108,14 @@ release:
 	make build
 	twine upload dist/*.tar.gz
 
+check:
+	make black-check
+	make flake8-check
+	make isort-check
+
 test:
 	make black-check
-	make flake8
+	make flake8-check
+	make isort-check
 	make mypy
 	make pytest
