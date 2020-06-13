@@ -38,9 +38,10 @@ before_install:
   - wget -q -O /tmp/lilypond $lilypond_url/$lilypond_source
   - sh /tmp/lilypond --batch
 
-  # clone & install abjad:
+  # clone & install abjad;
+  # must install -e editable for abjad/boilerplate/ directory:
   - git clone https://github.com/Abjad/abjad.git /tmp/abjad
-  - pip install /tmp/abjad
+  - pip install -e /tmp/abjad
   - export MYPYPATH=$MYPYPATH:/tmp/abjad
 
   # log environment variables
