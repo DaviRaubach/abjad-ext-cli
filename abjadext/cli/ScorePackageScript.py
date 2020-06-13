@@ -76,7 +76,7 @@ class ScorePackageScript(CLI):
 
     @classmethod
     def _get_boilerplate_path(cls):
-        return pathlib.Path(abjad.__path__[0]).joinpath("boilerplate")
+        return pathlib.Path(abjad.__path__[0]).parent / "boilerplate"
 
     @classmethod
     def _get_current_working_directory(self):
