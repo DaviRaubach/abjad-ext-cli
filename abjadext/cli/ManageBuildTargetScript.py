@@ -181,9 +181,7 @@ class ManageBuildTargetScript(ScorePackageScript):
         metadata["global_staff_size"] = 12
         metadata["uppercase_composer_name"] = metadata["composer_name"].upper()
         metadata["uppercase_title"] = metadata["title"].upper()
-        metadata[
-            "lilypond_version"
-        ] = abjad.abjad_configuration.get_lilypond_version_string()
+        metadata["lilypond_version"] = abjad.configuration.get_lilypond_version_string()
         source_name = "build"
         source_path = self._get_boilerplate_path().joinpath(source_name)
         suffixes = (".py", ".tex", ".ly", ".ily")

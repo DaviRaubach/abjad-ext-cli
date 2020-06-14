@@ -147,7 +147,7 @@ class ManageSegmentScript(ScorePackageScript):
         if not matching_paths:
             print("    No matching segments.")
             self._handle_list()
-        command = [abjad.abjad_configuration.get_text_editor()]
+        command = [abjad.configuration.get_text_editor()]
         for path in matching_paths:
             command.append(str(path.joinpath("definition.py")))
         command = " ".join(command)
@@ -226,7 +226,7 @@ class ManageSegmentScript(ScorePackageScript):
                 with open(file_path, "w") as file_pointer:
                     file_pointer.write(contents)
                 command = "{} {}".format(
-                    abjad.abjad_configuration.get_text_editor(), file_path
+                    abjad.configuration.get_text_editor(), file_path
                 )
                 self._call_subprocess(command)
                 with open(file_path, "r") as file_pointer:
