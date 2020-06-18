@@ -76,7 +76,9 @@ class ScorePackageScript(CLI):
 
     @classmethod
     def _get_boilerplate_path(cls):
-        return pathlib.Path(__file__).parent.parent.parent / "boilerplate"
+        path = pathlib.Path(__file__).parent.parent.parent / "boilerplate"
+        # temporary debug:
+        raise Exception(path, path.exists())
 
     @classmethod
     def _get_current_working_directory(self):
