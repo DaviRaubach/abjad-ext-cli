@@ -1,10 +1,10 @@
 .PHONY: docs build
 
 black-check:
-	black --check --diff --target-version=py38 .
+	black --check --diff --exclude=boilerplate --target-version=py38 .
 
 black-reformat:
-	black --target-version=py38 .
+	black --exclude=boilerplate --target-version=py38 .
 
 build:
 	python setup.py sdist
@@ -23,7 +23,7 @@ clean:
 docs:
 	make -C docs/ html
 
-flake_exclude = --exclude=__metadata__.py
+flake_exclude = --exclude=__metadata__.py,boilerplate
 flake_ignore = --ignore=E203,E266,E501,W503
 flake_options = --isolated --max-line-length=88
 
@@ -55,6 +55,7 @@ isort-check:
 	--multi-line=3 \
 	--project=abjad \
 	--recursive \
+	--skip-glob='*boilerplate*' \
 	--thirdparty=uqbar \
 	--trailing-comma \
 	--use-parentheses \
@@ -69,6 +70,7 @@ isort-reformat:
 	--multi-line=3 \
 	--project=abjad \
 	--recursive \
+	--skip-glob='*boilerplate*' \
 	--thirdparty=uqbar \
 	--trailing-comma \
 	--use-parentheses \
