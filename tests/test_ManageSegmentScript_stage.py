@@ -5,7 +5,6 @@ import pytest
 import uqbar.io
 from uqbar.strings import normalize
 
-import abjad
 import abjadext.cli
 
 
@@ -48,7 +47,7 @@ def test_success(paths, call_subprocess_mock):
         ),
     )
     call_subprocess_mock.assert_called_with(
-        "{} segments.txt".format(abjad.configuration.get_text_editor())
+        "{} segments.txt".format(abjadext.cli.get_text_editor())
     )
     call_subprocess_mock.side_effect = side_effect
     string_io = StringIO()
@@ -70,5 +69,5 @@ def test_success(paths, call_subprocess_mock):
         ),
     )
     call_subprocess_mock.assert_called_with(
-        "{} segments.txt".format(abjad.configuration.get_text_editor())
+        "{} segments.txt".format(abjadext.cli.get_text_editor())
     )

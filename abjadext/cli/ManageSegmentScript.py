@@ -5,6 +5,7 @@ import traceback
 import abjad
 
 from .ScorePackageScript import ScorePackageScript
+from .get_text_editor import get_text_editor
 
 
 class ManageSegmentScript(ScorePackageScript):
@@ -147,7 +148,7 @@ class ManageSegmentScript(ScorePackageScript):
         if not matching_paths:
             print("    No matching segments.")
             self._handle_list()
-        command = [abjad.configuration.get_text_editor()]
+        command = [get_text_editor()]
         for path in matching_paths:
             command.append(str(path.joinpath("definition.py")))
         command = " ".join(command)
@@ -225,9 +226,7 @@ class ManageSegmentScript(ScorePackageScript):
                 file_path = "segments.txt"
                 with open(file_path, "w") as file_pointer:
                     file_pointer.write(contents)
-                command = "{} {}".format(
-                    abjad.configuration.get_text_editor(), file_path
-                )
+                command = "{} {}".format(get_text_editor(), file_path)
                 self._call_subprocess(command)
                 with open(file_path, "r") as file_pointer:
                     contents = file_pointer.read()

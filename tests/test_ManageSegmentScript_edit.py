@@ -4,7 +4,6 @@ from io import StringIO
 import pytest
 import uqbar.io
 
-import abjad
 import abjadext.cli
 
 
@@ -30,5 +29,5 @@ def test_success(paths, call_subprocess_mock):
         ),
     )
     definition_path = segment_path.joinpath("definition.py")
-    command = "{} {!s}".format(abjad.configuration.get_text_editor(), definition_path)
+    command = "{} {!s}".format(abjadext.cli.get_text_editor(), definition_path)
     call_subprocess_mock.assert_called_with(command)
